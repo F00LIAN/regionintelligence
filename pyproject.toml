@@ -6,7 +6,11 @@ authors = ["Julian Sotelo <juliansotelo@mail.fresnostate.edu>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.11.4"
+selenium = "^4.13.0"
+webdriver-manager = "^4.0.1"
+ipykernel = "^6.25.2"
+bs4 = "^0.0.1"
 
 
 [build-system]
