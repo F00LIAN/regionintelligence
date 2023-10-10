@@ -13,6 +13,7 @@ ipykernel = "^6.25.2"
 bs4 = "^0.0.1"
 tqdm = "^4.66.1"
 pdfplumber = "^0.10.2"
+openpyxl = "^3.1.2"
 
 
 [build-system]
