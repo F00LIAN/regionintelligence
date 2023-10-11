@@ -2,10 +2,13 @@ import time
 import numpy as np
 import pandas as pd
 import re
+import os
 
 from src.driver_config import get_chrome_driver, navigate_and_print_title
 from src.const import SANTA_ANA_PLANNING_OFFICE_NAME, SANTA_ANA_PLANNING_URL, SANTA_ANA_PLANNING_OFFICE_EMAIL, SANTA_ANA_PLANNING_OFFICE_PHONE
 from src.paths import RAW_DATA_DIR, PROCESSED_DATA_DIR
+
+from src.const import orange_planner_phones, orange_planner_emails, orange_planner_names, ORANGE_PLANNING_URL
 
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -24,7 +27,7 @@ import pdfplumber
 import glob
 from tqdm import tqdm
 
-
+# Santa Ana Scraper
 class SantaAnaScraper:
     def __init__(self, driver):
         self.driver = driver
@@ -364,7 +367,7 @@ def concat_and_save_all_santa_ana_data():
     df.to_excel(PROCESSED_DATA_DIR / 'santaana' / file_name, header=True)
 
 
-def main():
+def main_santa_ana():
     """
     SANTA ANA
     """
@@ -390,3 +393,194 @@ def main():
 
     # Concatenate all the data and save to processed data directory
     concat_and_save_all_santa_ana_data
+
+# City of Orange Scraper
+
+class OrangeScraper:
+
+    # Define current_date as a class variable
+    current_date = datetime.now().strftime('%Y-%m-%d')
+
+    def __init__(self, driver):
+        self.driver = driver
+        self.pdf_urls = []
+
+    def connect(self, url):
+        self.driver.get(url)
+        print(self.driver.title)
+
+    def scrape_pdf(self):
+        try:
+            accordion_link = WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((By.CLASS_NAME, "accordion-heading"))
+            )
+            accordion_link.click()
+
+            pdf_link = WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((By.LINK_TEXT, "Current Pending Land Use Applications List"))
+            )
+            pdf_link.click()
+
+            pdf_url = pdf_link.get_attribute("href")
+            self.pdf_urls.append(pdf_url)
+            
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
+    def parse_orange_pdf(self, pdf_path=None):
+        if not pdf_path:
+            pdf_path = RAW_DATA_DIR / 'orange' / f'orange_city_data_{OrangeScraper.current_date}.pdf'
+            
+        # Open the PDF
+        with pdfplumber.open(pdf_path) as pdf:
+            all_data = []
+            
+            for page in pdf.pages:
+                data = page.extract_table()
+                filtered_data = [ 
+                    [row[1], row[3], row[4], row[5], ' '.join([str(cell) for cell in row[6:20] if cell is not None]), ' '.join([str(cell) for cell in row[22:27] if cell is not None])]
+                    for row in data[1:]  # Skipping the header
+                ]
+                all_data.extend(filtered_data)
+
+        # Convert the extracted data into a DataFrame
+        columns = ['address', 'projectName', 'description', 'planner', 'status', 'recentUpdate/owner']
+        df = pd.DataFrame(all_data, columns=columns)
+        
+        return df
+
+    def download_pdf(self, directory):
+        if not self.pdf_urls:
+            print("No PDFs found to download!")
+            return
+
+        # Use the class variable here
+        file_name = f"orange_city_data_{OrangeScraper.current_date}.pdf"
+
+        orange_dir = os.path.join(directory, 'orange')
+        if not os.path.exists(orange_dir):
+            os.makedirs(orange_dir)
+
+        for url in self.pdf_urls:
+            response = requests.get(url)
+            with open(os.path.join(orange_dir, file_name), "wb") as f:
+                f.write(response.content)
+        
+        return os.path.join(orange_dir, file_name)
+    
+    def clean_orange_pdf(self, df):
+        # Convert all None values to NaN
+        df = df.where(pd.notna(df), None)
+
+        # Drop rows where at least 4 columns are NaN
+        df = df[df.apply(lambda x: x.isna().sum() < 3, axis=1)]
+
+        # Cleaning operations
+        df['status'] = df['status'].str.replace('\n', '', regex=False)
+        
+        for column in df.columns:
+            if column != 'status':
+                df[column] = df[column].str.replace('\n', ' ', regex=False)
+
+        return df
+    
+    def move_text_from_status_to_planner(self, row):
+        # Extract text other than "Pending" or "Approved"
+        extraneous_text = re.sub(r'Pending|Approved', '', row['status']).strip()
+
+        # If there's extraneous text and the planner is None, update the planner column
+        if extraneous_text and (row['planner'] == 'None' or pd.isna(row['planner'])):
+            row['planner'] = extraneous_text
+
+        # Remove extraneous text from the status column
+        row['status'] = row['status'].replace(extraneous_text, '').strip()
+
+        # If status contains both "Pending" and "Approved", set it to "Pending"
+        if "Approved" in row['status'] and "Pending" in row['status']:
+            row['status'] = "Pending"
+        elif "Pending" in row['status']:
+            row['status'] = "Pending"
+        elif "Approved" in row['status']:
+            row['status'] = "Approved"
+        else:
+            row['status'] = "Denied"
+
+        return row
+    
+    def process_plannernames(self, df):
+        df = df.apply(self.move_text_from_status_to_planner, axis=1)
+        def extract_planner_name(row):
+            names_set = set(orange_planner_names.values()) # Set of all planner names
+            for name in names_set:
+                if name in row:
+                    return name
+            return None
+        
+        df['planner'] = df['planner'].apply(extract_planner_name)
+        df['phone'] = df['planner'].map(orange_planner_phones)
+        df['email'] = df['planner'].map(orange_planner_emails)
+        return df
+    
+    def update_description_based_on_project(self, row):
+        # If 'ADU' is in projectName and description is empty or NaN
+        if "ADU" in str(row['projectName']) and (pd.isnull(row['description']) or row['description'] == ''):
+            row['description'] = "Applicant has requested to build an ADU"
+        return row
+
+    def refine_drop_empty_name_rows(self, df):
+        df = df.apply(self.update_description_based_on_project, axis=1)
+        df = df[df['projectName'].astype(str).str.strip() != '']
+        df = df[df['projectName'].astype(str).str.strip() != ' ']
+        df = df.dropna(subset=['projectName'])
+        return df
+    
+    def save_to_processed(self, df):
+        # Use the class variable here
+        file_name = f"orange_city_data_{OrangeScraper.current_date}.xlsx"
+        path = PROCESSED_DATA_DIR / 'orange' / file_name
+        df.to_excel(path, header=True)
+    
+    def extract_recent_date_and_owner(self, s):
+        # Extract all dates in the format MM/DD/YYYY
+        dates = re.findall(r'\d{1,2}/\d{1,2}/\d{4}', s)
+        recent_date = None
+        if dates:
+            # Convert strings to datetime objects to find the most recent date
+            recent_date = max(pd.to_datetime(dates)).strftime('%m/%d/%Y')
+    
+        # Assuming names are capitalized words. Extract them
+        name_list = re.findall(r'\b[A-Z][a-z]+\b', s)
+        owner = ' '.join(name_list[:2]) if name_list else None  # Considering first and last names only
+
+        return recent_date, owner
+    
+    def process_recentUpdate_owner_column(self, df):
+        # Apply the extraction function to the 'recentUpdate/owner' column
+        df['recentUpdate'], df['owner'] = zip(*df['recentUpdate/owner'].apply(self.extract_recent_date_and_owner))
+        
+        # Drop the original 'recentUpdate/owner' column
+        df.drop(columns=['recentUpdate/owner'], inplace=True)
+        df.reset_index(drop=True, inplace=True)
+        return df
+
+def main_city_of_orange():
+    """
+    CITY OF ORANGE
+    """
+    # Instantiate the Chrome driver
+    driver = get_chrome_driver()
+    scraper = OrangeScraper(driver)
+    scraper.connect(ORANGE_PLANNING_URL)
+    scraper.scrape_pdf()
+    pdf_path = scraper.download_pdf(RAW_DATA_DIR)
+    df = scraper.parse_orange_pdf(pdf_path)
+    df = scraper.clean_orange_pdf(df)
+    df = scraper.refine_drop_empty_name_rows(df)
+    df = scraper.process_plannernames(df)
+    df = scraper.process_recentUpdate_owner_column(df)
+    scraper.save_to_processed(df)
+    driver.close()
+
+
+
+    
