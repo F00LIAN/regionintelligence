@@ -8,8 +8,18 @@ from src.driver_config import get_chrome_driver, navigate_and_print_title
 from src.const import SANTA_ANA_PLANNING_OFFICE_NAME, SANTA_ANA_PLANNING_URL, SANTA_ANA_PLANNING_OFFICE_EMAIL, SANTA_ANA_PLANNING_OFFICE_PHONE
 from src.paths import RAW_DATA_DIR, PROCESSED_DATA_DIR
 
-from src.const import orange_planner_phones, orange_planner_emails, orange_planner_names, ORANGE_PLANNING_URL
-
+from src.const import (
+    orange_planner_phones, 
+    orange_planner_emails, 
+    orange_planner_names, 
+    ORANGE_PLANNING_URL)
+from src.const import (
+    anaheim_planner_emails, 
+    anaheim_planner_phones, 
+    anaheim_planner_names, 
+    ANAHEIM_PLANNING_OFFICE_EMAIL, 
+    ANAHEIM_PLANNING_OFFICE_PHONE
+)
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium import webdriver
@@ -26,6 +36,9 @@ import pandas as pd
 import pdfplumber
 import glob
 from tqdm import tqdm
+
+
+
 
 # Santa Ana Scraper
 class SantaAnaScraper:
@@ -582,5 +595,76 @@ def main_city_of_orange():
     driver.close()
 
 
+# City of Anaheim Scraper
 
-    
+
+class AnaheimScraper:
+
+    current_date = datetime.now().strftime('%Y-%m-%d')
+
+    def __init__(self):
+        # Initializing some attributes
+        self.current_projects_df = None
+        self.current_applications_df = None
+        self.driver = None
+
+    @staticmethod
+    def get_most_recent_file(path, file_startswith):
+        list_of_files = [f for f in os.listdir(path) if f.startswith(file_startswith)]
+        if not list_of_files:
+            return None
+        latest_file = max(list_of_files, key=lambda x: os.path.getctime(os.path.join(path, x)))
+        return os.path.join(path, latest_file)
+
+    def read_anaheim_csv(self):
+        anaheim_path = self.get_most_recent_file(RAW_DATA_DIR / 'anaheim', 'AndysMap')
+        dev_apps_path = self.get_most_recent_file(RAW_DATA_DIR / 'anaheim', 'dev_apps')
+        if not anaheim_path or not dev_apps_path:
+            raise Exception("Couldn't find the required files!")
+        self.current_projects_df = pd.read_csv(anaheim_path)
+        self.current_applications_df = pd.read_csv(dev_apps_path)
+
+    def process_the_dataframe(self, df):
+        if 'Staff Name' in df.columns:
+            df['email'] = df['Staff Name'].map(anaheim_planner_emails)
+            df['phone'] = df['Staff Name'].map(anaheim_planner_phones)
+            df['email'].fillna(ANAHEIM_PLANNING_OFFICE_EMAIL, inplace=True)
+            df['phone'].fillna(ANAHEIM_PLANNING_OFFICE_PHONE, inplace=True)
+        else:
+            df['email'] = ANAHEIM_PLANNING_OFFICE_EMAIL
+            df['phone'] = ANAHEIM_PLANNING_OFFICE_PHONE
+        df.rename(columns={
+            'Address': 'address',
+            'Description': 'description',
+            'Application Name': 'projectName',
+            'Type of Use': 'typeOfUse',
+            'Case Status': 'status',
+            'Applicant': 'owner',
+            'Opened Date': 'recentUpdate'
+        }, inplace=True)
+        df['city'] = 'Anaheim'
+        df = df[['address', 'description', 'projectName', 'typeOfUse', 'status', 'owner', 'recentUpdate', 'email', 'phone', 'city']]
+        #df['projectName'] = df['projectName'].apply(lambda x: re.sub(r'\[.*?\]\s*', '', x))
+        return df
+
+    def run(self):
+        # Reads the CSV
+        self.read_anaheim_csv()
+
+        # Processes the first dataframe
+        self.current_projects_df = self.process_the_dataframe(self.current_projects_df)
+
+        # (Optional) Processes the second dataframe, etc.
+
+        # Returns the processed dataframe for further operations or analysis
+        return self.current_projects_df
+
+def main_anaheim():
+    """
+    CITY OF ANAHEIM
+    """
+    scraper = AnaheimScraper()
+    df = scraper.run()
+    file_name = f"anaheim_city_data_{AnaheimScraper.current_date}.xlsx"
+    path = PROCESSED_DATA_DIR / 'anaheim' / file_name
+    df.to_excel(path, header=True)
