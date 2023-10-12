@@ -43,6 +43,9 @@ We value the developer community and welcome contributions, feedback, and issues
 
 ## City Notes of Improvement of Listings
 
+- **System Functionality** 
+We should verify that we can access the most recent data for every call. So there are no duplicates and we are not missing any data. Therefore when we call the API we should be able to get the most recent data.
+
 - **City 1**: Santa Ana, Ca
 
 We can try and extract the images for each listing so we can use for the website listings and host images on the map. 
@@ -50,6 +53,12 @@ We can try and extract the images for each listing so we can use for the website
 - **City 2**: Orange, Ca
 
 We need to fill in the gaps of the parsing status of the PDF, the PDF can potentially be parsed again. So far it does a 75% decent job of parsing but we have to create scripts to parse and clean further. Even then it does not complete the entire job. 
+
+- **City 3**: Anaheim, Ca
+
+The data is already pretty clean and organized, we only need to find a way to automate the process of acquiring the data as it is currently done manually. Selenium seems to fail with this. 
+
+Anaheim has weekly information on recent submitted applications. We can potentially use this as a resource to get the most recent data. This would be a future task. 
 
 ## Contact
 
