@@ -2,7 +2,7 @@ from pathlib import Path
 import os
 
 PARENT_DIR = Path(__file__).parent.resolve().parent
-DATA_DIR = PARENT_DIR / 'data'
+DATA_DIR = PARENT_DIR / 'map_data'
 RAW_DATA_DIR = DATA_DIR / 'raw'
 PROCESSED_DATA_DIR = DATA_DIR / 'processed'
 
