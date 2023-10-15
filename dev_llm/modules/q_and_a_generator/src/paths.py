@@ -9,6 +9,8 @@ RAW_DATA_DIR = DATA_DIR / "raw"
 
 PROCESSED_DATA_DIR = DATA_DIR / "processed"
 
+JSON_DATA_DIR = DATA_DIR / "json"
+
 # Ensure directories exist, and if not, create them
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 RAW_DATA_DIR.mkdir(parents=True, exist_ok=True)

@@ -63,8 +63,9 @@ class CaliforniaUpCodesScraper:
             
             #self._save_sections_to_file(section_div, index)
         #self._combine_files(len(urls))
-        self._save_all_sections_to_file(section_div)
-        
+        #self._save_all_sections_to_file(section_div)
+        return section_div
+    
     def _print_sections(self, sections):
         print("Printing extracted sections...")
 
@@ -102,7 +103,8 @@ def main_california_upcodes():
     scraper = CaliforniaUpCodesScraper(CALIFORNIA_UPCODES_URL)
     scraper.navigate_and_get_title()
     urls = scraper.extract_links_from_main("div.flex.flex-row")
-    scraper.extract_text_from_sublinks(urls)
+    scraped_sections = scraper.extract_text_from_sublinks(urls)
+    scraper._save_all_sections_to_file(scraped_sections)
     scraper.close()
 
 # Scrape Los Angeles Codes
@@ -149,7 +151,8 @@ class LosAngelesUpCodesScraper:
             
             #self._save_sections_to_file(section_div, index)
         #self._combine_files(len(urls))
-        self._save_all_sections_to_file(section_div)
+        #self._save_all_sections_to_file(section_div)
+        return section_div
         
     def _print_sections(self, sections):
         print("Printing extracted sections...")
@@ -188,7 +191,8 @@ def main_los_angeles_upcodes():
     scraper = LosAngelesUpCodesScraper(LOS_ANGELES_UPCODES_URL)
     scraper.navigate_and_get_title()
     urls = scraper.extract_links_from_main("div.flex.flex-row")
-    scraper.extract_text_from_sublinks(urls)
+    scraper_sections = scraper.extract_text_from_sublinks(urls)
+    scraper._save_all_sections_to_file(scraper_sections)
     scraper.close()
 
 # Scrape Los Angeles County Codes
@@ -235,7 +239,8 @@ class LosAngelesCountyUpCodesScraper:
             
             #self._save_sections_to_file(section_div, index)
         #self._combine_files(len(urls))
-        self._save_all_sections_to_file(section_div)
+        #self._save_all_sections_to_file(section_div)
+        return section_div
         
     def _print_sections(self, sections):
         print("Printing extracted sections...")
@@ -274,7 +279,8 @@ def main_los_angeles_county_upcodes():
     scraper = LosAngelesCountyUpCodesScraper(LOS_ANGELES_COUNTY_UPCODES_URL)
     scraper.navigate_and_get_title()
     urls = scraper.extract_links_from_main("div.flex.flex-row")
-    scraper.extract_text_from_sublinks(urls)
+    scraper_sections = scraper.extract_text_from_sublinks(urls)
+    scraper._save_all_sections_to_file(scraper_sections)
     scraper.close()
 
 # Scrape San Francisco Codes
@@ -361,7 +367,8 @@ def main_san_francisco_upcodes():
     scraper = SanFranciscoUpCodesScraper(SAN_FRANCISCO_UPCODES_URL)
     scraper.navigate_and_get_title()
     urls = scraper.extract_links_from_main("div.flex.flex-row")
-    scraper.extract_text_from_sublinks(urls)
+    scraped_sections = scraper.extract_text_from_sublinks(urls)
+    scraper._save_all_sections_to_file(scraped_sections)
     scraper.close()
 
 # Scrape San Jose Codes
@@ -409,7 +416,8 @@ class SanJoseUpCodesScraper:
             
             #self._save_sections_to_file(section_div, index)
         #self._combine_files(len(urls))
-        self._save_all_sections_to_file(section_div)
+        #self._save_all_sections_to_file(section_div)
+        return section_div
         
     def _print_sections(self, sections):
         print("Printing extracted sections...")
@@ -448,5 +456,6 @@ def main_san_jose_upcodes():
     scraper = SanJoseUpCodesScraper(SAN_JOSE_UPCODES_URL)
     scraper.navigate_and_get_title()
     urls = scraper.extract_links_from_main("div.flex.flex-row")
-    scraper.extract_text_from_sublinks(urls)
+    scraped_sections = scraper.extract_text_from_sublinks(urls)
+    scraper._save_all_sections_to_file(scraped_sections)
     scraper.close()
