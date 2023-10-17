@@ -45,10 +45,13 @@ class CaliforniaUpCodesScraper:
         self.output_file_path = RAW_DATA_DIR / 'california_building_codes' / f"california_{timestamp_str}.txt"
         section_div = []
         for index, url in enumerate(urls):
+            if not url:
+                print("Encountered empty URL, skipping...")
+                continue
             print(f"Processing URL {index + 1}/{len(urls)}: {url}")
             self.driver.get(url)
             elements = self.driver.find_elements(By.CSS_SELECTOR, "a.block.w-full")
-            sublinks = [element.get_attribute("href") for element in elements]
+            sublinks = [element.get_attribute("href") for element in elements if element.get_attribute("href")]
             
             for sublink in sublinks:
                 self.driver.get(sublink)
@@ -63,8 +66,7 @@ class CaliforniaUpCodesScraper:
             
             #self._save_sections_to_file(section_div, index)
         #self._combine_files(len(urls))
-        #self._save_all_sections_to_file(section_div)
-        return section_div
+        self._save_all_sections_to_file(section_div)
     
     def _print_sections(self, sections):
         print("Printing extracted sections...")
@@ -103,8 +105,7 @@ def main_california_upcodes():
     scraper = CaliforniaUpCodesScraper(CALIFORNIA_UPCODES_URL)
     scraper.navigate_and_get_title()
     urls = scraper.extract_links_from_main("div.flex.flex-row")
-    scraped_sections = scraper.extract_text_from_sublinks(urls)
-    scraper._save_all_sections_to_file(scraped_sections)
+    scraper.extract_text_from_sublinks(urls)
     scraper.close()
 
 # Scrape Los Angeles Codes
@@ -133,10 +134,13 @@ class LosAngelesUpCodesScraper:
         self.output_file_path = RAW_DATA_DIR / 'los_angeles_building_codes' / f"los_angeles_{timestamp_str}.txt"
         section_div = []
         for index, url in enumerate(urls):
+            if not url:
+                print("Encountered empty URL, skipping...")
+                continue
             print(f"Processing URL {index + 1}/{len(urls)}: {url}")
             self.driver.get(url)
             elements = self.driver.find_elements(By.CSS_SELECTOR, "a.block.w-full")
-            sublinks = [element.get_attribute("href") for element in elements]
+            sublinks = [element.get_attribute("href") for element in elements if element.get_attribute("href")]
             
             for sublink in sublinks:
                 self.driver.get(sublink)
@@ -151,8 +155,7 @@ class LosAngelesUpCodesScraper:
             
             #self._save_sections_to_file(section_div, index)
         #self._combine_files(len(urls))
-        #self._save_all_sections_to_file(section_div)
-        return section_div
+        self._save_all_sections_to_file(section_div)
         
     def _print_sections(self, sections):
         print("Printing extracted sections...")
@@ -191,8 +194,7 @@ def main_los_angeles_upcodes():
     scraper = LosAngelesUpCodesScraper(LOS_ANGELES_UPCODES_URL)
     scraper.navigate_and_get_title()
     urls = scraper.extract_links_from_main("div.flex.flex-row")
-    scraper_sections = scraper.extract_text_from_sublinks(urls)
-    scraper._save_all_sections_to_file(scraper_sections)
+    scraper.extract_text_from_sublinks(urls)
     scraper.close()
 
 # Scrape Los Angeles County Codes
@@ -221,10 +223,14 @@ class LosAngelesCountyUpCodesScraper:
         self.output_file_path = RAW_DATA_DIR / 'los_angeles_county_building_codes' / f"los_angeles_county_{timestamp_str}.txt"
         section_div = []
         for index, url in enumerate(urls):
+            if not url:
+                print("Encountered empty URL, skipping...")
+                continue
             print(f"Processing URL {index + 1}/{len(urls)}: {url}")
             self.driver.get(url)
             elements = self.driver.find_elements(By.CSS_SELECTOR, "a.block.w-full")
-            sublinks = [element.get_attribute("href") for element in elements]
+            sublinks = [element.get_attribute("href") for element in elements if element.get_attribute("href")]
+            
             
             for sublink in sublinks:
                 self.driver.get(sublink)
@@ -239,8 +245,7 @@ class LosAngelesCountyUpCodesScraper:
             
             #self._save_sections_to_file(section_div, index)
         #self._combine_files(len(urls))
-        #self._save_all_sections_to_file(section_div)
-        return section_div
+        self._save_all_sections_to_file(section_div)
         
     def _print_sections(self, sections):
         print("Printing extracted sections...")
@@ -279,8 +284,7 @@ def main_los_angeles_county_upcodes():
     scraper = LosAngelesCountyUpCodesScraper(LOS_ANGELES_COUNTY_UPCODES_URL)
     scraper.navigate_and_get_title()
     urls = scraper.extract_links_from_main("div.flex.flex-row")
-    scraper_sections = scraper.extract_text_from_sublinks(urls)
-    scraper._save_all_sections_to_file(scraper_sections)
+    scraper.extract_text_from_sublinks(urls)
     scraper.close()
 
 # Scrape San Francisco Codes
@@ -310,10 +314,13 @@ class SanFranciscoUpCodesScraper:
         self.output_file_path = RAW_DATA_DIR / 'san_francisco_building_codes' / f"san_francisco_{timestamp_str}.txt"
         section_div = []
         for index, url in enumerate(urls):
+            if not url:
+                print("Encountered empty URL, skipping...")
+                continue
             print(f"Processing URL {index + 1}/{len(urls)}: {url}")
             self.driver.get(url)
             elements = self.driver.find_elements(By.CSS_SELECTOR, "a.block.w-full")
-            sublinks = [element.get_attribute("href") for element in elements]
+            sublinks = [element.get_attribute("href") for element in elements if element.get_attribute("href")]
             
             for sublink in sublinks:
                 self.driver.get(sublink)
@@ -367,8 +374,7 @@ def main_san_francisco_upcodes():
     scraper = SanFranciscoUpCodesScraper(SAN_FRANCISCO_UPCODES_URL)
     scraper.navigate_and_get_title()
     urls = scraper.extract_links_from_main("div.flex.flex-row")
-    scraped_sections = scraper.extract_text_from_sublinks(urls)
-    scraper._save_all_sections_to_file(scraped_sections)
+    scraper.extract_text_from_sublinks(urls)
     scraper.close()
 
 # Scrape San Jose Codes
@@ -389,7 +395,7 @@ class SanJoseUpCodesScraper:
         )
         time.sleep(1)
         links = main.find_elements(By.CSS_SELECTOR, ".group.font-inter")
-        extracted_links = [link.get_attribute("href") for link in links]
+        extracted_links = [link.get_attribute("href") for link in links if link.get_attribute("href")]
         print(f"Extracted {len(extracted_links)} links from main page.")
         return extracted_links
 
@@ -398,10 +404,13 @@ class SanJoseUpCodesScraper:
         self.output_file_path = RAW_DATA_DIR / 'san_jose_building_codes' / f"san_jose_{timestamp_str}.txt"
         section_div = []
         for index, url in enumerate(urls):
+            if not url:
+                print("Encountered empty URL, skipping...")
+                continue
             print(f"Processing URL {index + 1}/{len(urls)}: {url}")
             self.driver.get(url)
             elements = self.driver.find_elements(By.CSS_SELECTOR, "a.block.w-full")
-            sublinks = [element.get_attribute("href") for element in elements]
+            sublinks = [element.get_attribute("href") for element in elements if element.get_attribute("href")]
             
             for sublink in sublinks:
                 self.driver.get(sublink)
@@ -416,8 +425,8 @@ class SanJoseUpCodesScraper:
             
             #self._save_sections_to_file(section_div, index)
         #self._combine_files(len(urls))
-        #self._save_all_sections_to_file(section_div)
-        return section_div
+        self._save_all_sections_to_file(section_div)
+        #return section_div
         
     def _print_sections(self, sections):
         print("Printing extracted sections...")
@@ -456,6 +465,5 @@ def main_san_jose_upcodes():
     scraper = SanJoseUpCodesScraper(SAN_JOSE_UPCODES_URL)
     scraper.navigate_and_get_title()
     urls = scraper.extract_links_from_main("div.flex.flex-row")
-    scraped_sections = scraper.extract_text_from_sublinks(urls)
-    scraper._save_all_sections_to_file(scraped_sections)
+    scraper.extract_text_from_sublinks(urls)
     scraper.close()
