@@ -223,6 +223,8 @@ class SantaAnaScraper:
         Save the DataFrame to an Excel file in the RAW_DATA_DIR / 'santana' directory.
         The saved file name will be in the format: [file_name_prefix]_YYYY-MM-DD.xlsx
         :param file_name_prefix: Prefix of the Excel file.
+
+        THIS SAVES SANTA ANA'S CURRENT PROJECTS TO RAW DATA DIRECTORY
         """
         current_date = datetime.now().strftime('%Y-%m-%d')
         file_name = f"{file_name_prefix}_{current_date}.xlsx"
@@ -361,6 +363,8 @@ class SantaAnaPDFParser:
         Save the DataFrame to an Excel file in the RAW_DATA_DIR / 'santana' directory.
         The saved file name will be in the format: [file_name_prefix]_YYYY-MM-DD.xlsx
         :param file_name_prefix: Prefix of the Excel file.
+        
+        THIS SAVES SANTA ANA APPROVED DATA TO RAW DATA DIRECTORY
         """
         current_date = datetime.now().strftime('%Y-%m-%d')
         file_name = f"{file_name_prefix}_{current_date}.xlsx"
@@ -373,12 +377,12 @@ def concat_and_save_all_santa_ana_data():
     dfs = [pd.read_excel(file) for file in files]
     df = pd.concat(dfs, ignore_index=True)
     df.drop(columns=['Unnamed: 0'], inplace=True)
-
+    df.drop_duplicates(inplace=True)
     # Save the data to the processed data directory
     current_date = datetime.now().strftime('%Y-%m-%d')
     file_name = f"santa_ana_data_{current_date}.xlsx"
     df.to_excel(PROCESSED_DATA_DIR / 'santaana' / file_name, header=True)
-
+    return df
 
 def main_santa_ana():
     """
@@ -403,10 +407,10 @@ def main_santa_ana():
     df = parser.add_name_phone_email(df)
     df = parser.change_column_names(df)
     parser.save_to_raw(df)
-
+    print('Time to Concatenate and Save')
     # Concatenate all the data and save to processed data directory
-    concat_and_save_all_santa_ana_data
-
+    concat_and_save_all_santa_ana_data()
+    print('Done')
 # City of Orange Scraper
 
 class OrangeScraper:
