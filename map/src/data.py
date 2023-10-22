@@ -5,21 +5,30 @@ import re
 import os
 
 from src.driver_config import get_chrome_driver, navigate_and_print_title
-from src.const import SANTA_ANA_PLANNING_OFFICE_NAME, SANTA_ANA_PLANNING_URL, SANTA_ANA_PLANNING_OFFICE_EMAIL, SANTA_ANA_PLANNING_OFFICE_PHONE
+from src.const import (
+    SANTA_ANA_PLANNING_OFFICE_NAME, 
+    SANTA_ANA_PLANNING_URL, 
+    SANTA_ANA_PLANNING_OFFICE_EMAIL, 
+    SANTA_ANA_PLANNING_OFFICE_PHONE,
+    FULLERTON_PLANNING_OFFICE_EMAIL)
 from src.paths import RAW_DATA_DIR, PROCESSED_DATA_DIR
 
 from src.const import (
     orange_planner_phones, 
     orange_planner_emails, 
     orange_planner_names, 
-    ORANGE_PLANNING_URL)
+    ORANGE_PLANNING_URL,
+    fullerton_planner_names,
+    fullerton_planner_phones)
+
 from src.const import (
     anaheim_planner_emails, 
     anaheim_planner_phones, 
     anaheim_planner_names, 
     ANAHEIM_PLANNING_OFFICE_EMAIL, 
-    ANAHEIM_PLANNING_OFFICE_PHONE
-)
+    ANAHEIM_PLANNING_OFFICE_PHONE,
+    FULLERTON_PLANNING_URL) 
+
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium import webdriver
@@ -36,6 +45,7 @@ import pandas as pd
 import pdfplumber
 import glob
 from tqdm import tqdm
+from difflib import SequenceMatcher
 
 
 
@@ -411,7 +421,10 @@ def main_santa_ana():
     # Concatenate all the data and save to processed data directory
     concat_and_save_all_santa_ana_data()
     print('Done')
+
+
 # City of Orange Scraper
+
 
 class OrangeScraper:
 
@@ -672,3 +685,124 @@ def main_anaheim():
     file_name = f"anaheim_city_data_{AnaheimScraper.current_date}.xlsx"
     path = PROCESSED_DATA_DIR / 'anaheim' / file_name
     df.to_excel(path, header=True)
+    return df, print('Anaheim Done')
+
+
+# City of Fullertron Scraper
+
+
+class FullertonScraper:
+
+    # Define current_date as a class variable
+    current_date = datetime.now().strftime('%Y-%m-%d')
+
+    def __init__(self, driver):
+        self.driver = driver
+        self.heading_name = []
+        self.listing_names = []
+        self.case_number_texts = []
+        self.project_locations = []
+        self.type_of_use = []
+        self.planner_leads = []
+        self.project_descriptions = []
+        self.project_status = []
+        self.image_urls = []
+
+    def connect(self, url):
+        self.driver.get(url)
+        print(self.driver.title)
+
+    def scrape_data(self):
+        try:
+            main = WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((By.CLASS_NAME, "govAccess-reTable-4"))
+            )
+
+            headers = main.find_elements(By.CSS_SELECTOR, "tr:first-of-type td")
+            for header in headers:
+                self.heading_name.append(header.text)
+
+            types = main.find_elements(By.CSS_SELECTOR, "tr:nth-of-type(n+2)")
+            for type in types:
+                first_td = type.find_element(By.CSS_SELECTOR, "td:first-of-type")
+                self.type_of_use.append(first_td.text)
+
+            listings = main.find_elements(By.CSS_SELECTOR, "tr:nth-of-type(n+2)")
+            for listing in listings:
+                second_td = listing.find_element(By.CSS_SELECTOR, "td:nth-of-type(2)")
+                self.listing_names.append(second_td.text)
+
+                third_td = listing.find_element(By.CSS_SELECTOR, "td:nth-of-type(3)")
+                self.project_locations.append(third_td.text)
+
+                fourth_td = listing.find_element(By.CSS_SELECTOR, "td:nth-of-type(4)")
+                self.project_status.append(fourth_td.text)
+
+                fifth_td = listing.find_element(By.CSS_SELECTOR, "td:nth-of-type(5)")
+                self.case_number_texts.append(fifth_td.text)
+
+                sixth_td = listing.find_element(By.CSS_SELECTOR, "td:nth-of-type(6)")
+                self.planner_leads.append(sixth_td.text)
+
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
+    def create_dataframe(self):
+        listing_names = [item.split("\n")[0] for item in self.listing_names]
+        description = [item.split("\n")[1] if '\n' in item else '' for item in self.listing_names]
+
+        df = pd.DataFrame(
+            {
+                "projectName": listing_names,
+                "address": self.project_locations,
+                "planner": self.planner_leads,
+                "status": self.project_status,
+                "type_of_use": self.type_of_use,
+                "description": description
+            }
+        )
+
+        df['planner'] = df['planner'].str.strip()
+        
+        # Helper function to get the closest match from the dictionary
+        def get_closest_match(name):
+            max_ratio = 0
+            best_match = None
+            for key, value in fullerton_planner_names.items():
+                ratio = SequenceMatcher(None, name, value).ratio()
+                if ratio > max_ratio:
+                    max_ratio = ratio
+                    best_match = value
+        
+        # If similarity is more than 30%, return the matched name, otherwise return the original name
+            return best_match if max_ratio > 0.3 else name
+
+        df["planner"] = df["planner"].apply(get_closest_match)
+    
+        # Assuming you have another dictionary called fullerton_planner_phones which maps names to phone numbers
+        df["phone"] = df["planner"].map(fullerton_planner_phones)
+
+        # Replace '\n' with ' ' in the 'status' column
+        df["status"] = df["status"].str.replace('\n', ' ')
+
+        df['city'] = 'Fullerton'
+
+        df['email'] = FULLERTON_PLANNING_OFFICE_EMAIL
+
+        return df
+    
+    def save_to_raw(self, path=None):
+        if not path:
+            path = RAW_DATA_DIR / 'fullerton' / f'fullerton_city_data_{FullertonScraper.current_date}.xlsx'
+        df = self.create_dataframe()
+        df.to_csv(path, index=False)
+
+def main_city_of_fullerton():
+    driver = get_chrome_driver()
+    scraper = FullertonScraper(driver)
+    scraper.connect(FULLERTON_PLANNING_URL)
+    scraper.scrape_data()
+    df = scraper.create_dataframe()
+    scraper.save_to_raw()
+    driver.quit()
+    return df, print('Fullerton Done')
