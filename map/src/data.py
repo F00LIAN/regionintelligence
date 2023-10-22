@@ -7,7 +7,8 @@ import os
 from src.driver_config import get_chrome_driver, navigate_and_print_title
 from src.const import (
     SANTA_ANA_PLANNING_OFFICE_NAME, 
-    SANTA_ANA_PLANNING_URL, 
+    SANTA_ANA_PLANNING_URL,
+    GARDEN_GROVE_PLANNING_URL, 
     SANTA_ANA_PLANNING_OFFICE_EMAIL, 
     SANTA_ANA_PLANNING_OFFICE_PHONE,
     FULLERTON_PLANNING_OFFICE_EMAIL)
@@ -19,7 +20,11 @@ from src.const import (
     orange_planner_names, 
     ORANGE_PLANNING_URL,
     fullerton_planner_names,
-    fullerton_planner_phones)
+    fullerton_planner_phones,
+    garden_grove_planner_emails,
+    garden_grove_planner_names,
+    garden_grove_planner_phones,
+    )
 
 from src.const import (
     anaheim_planner_emails, 
@@ -35,6 +40,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
+import openpyxl
 
 from pathlib import Path
 from datetime import datetime, timedelta
@@ -810,3 +816,134 @@ def main_city_of_fullerton():
     scraper.save_to_raw()
     driver.quit()
     return df, print('Fullerton Done')
+
+# City of Garden Grove Scraper
+
+class GardenGroveScraper:
+
+    current_date = datetime.now().strftime('%Y-%m-%d')
+
+    def __init__(self, driver):
+        self.driver = driver
+        self.listing_names = []
+        self.case_number_texts = []
+        self.project_locations = []
+        self.planner_leads = []
+        self.project_descriptions = []
+        self.project_status = []
+        self.image_urls = []
+
+    def connect(self, url):
+        self.driver.get(url)
+        print(self.driver.title)
+
+    def scrape_data(self):
+        try:
+            main = WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, "section.main-content-w-aside"))
+            )
+            # Scraping listing names
+            headers = main.find_elements(By.CSS_SELECTOR, "div.h2")
+            for header in headers:
+                self.listing_names.append(header.text)
+
+            # Scraping image URLs
+            urls = main.find_elements(
+            By.CSS_SELECTOR,
+            "div.paragraph.paragraph--type--hero-image.paragraph--view-mode--default"
+            )
+            for url in urls:
+                img_url = []
+                try:
+                    images_in_div = url.find_elements(By.TAG_NAME, "img")
+                    for img in images_in_div:
+                        image_src = img.get_attribute("src")
+                    if image_src:
+                        img_url.append(image_src)
+                    else:
+                        img_url.append("NA")
+                except:
+                    img_url.append("NA")
+                self.image_urls.append(img_url)
+
+            # Scraping case numbers
+            case_numbers = main.find_elements(By.CSS_SELECTOR, "div.paragraph-text p:first-of-type")
+            for case_number in case_numbers:
+                self.case_number_texts.append(case_number.text)
+
+            # Scraping project locations
+            locations = main.find_elements(By.CSS_SELECTOR, "div.paragraph-text p:nth-of-type(2)")
+            for location in locations:
+                self.project_locations.append(location.text)
+
+            # Scraping planner leads
+            planners = main.find_elements(By.CSS_SELECTOR, "div.paragraph-text p:nth-of-type(3)")
+            for planner in planners:
+                self.planner_leads.append(planner.text)
+
+            # Scraping project descriptions
+            descriptions = main.find_elements(By.CSS_SELECTOR, "div.paragraph-text p:nth-of-type(4)")
+            for description in descriptions:
+                self.project_descriptions.append(description.text)
+
+            # Scraping project status
+            status = main.find_elements(By.CSS_SELECTOR, "div.paragraph-text p:nth-of-type(5)")
+            for stats in status:
+                self.project_status.append(stats.text)
+           
+
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
+    def create_dataframe(self):
+        df = pd.DataFrame(
+            {
+                "projectNames": self.listing_names,
+                #"Image_URLs": self.image_urls,
+                #"caseNumbers": self.case_number_texts,
+                "address": self.project_locations,
+                "planner": self.planner_leads,
+                "description": self.project_descriptions,
+                "status": self.project_status,
+            }
+        )
+        # Helper function to get the closest match from the dictionary
+        def get_closest_match(name):
+            max_ratio = 0
+            best_match = None
+            for key, value in garden_grove_planner_names.items():
+                ratio = SequenceMatcher(None, name, value).ratio()
+                if ratio > max_ratio:
+                    max_ratio = ratio
+                    best_match = value
+        
+        # If similarity is more than 30%, return the matched name, otherwise return the original name
+            return best_match if max_ratio > 0.3 else name
+        
+        # Apply the function to the planner column
+        df['planner'] = df['planner'].apply(get_closest_match)
+
+        # Add email and phone columns
+        df['email'] = df['planner'].map(garden_grove_planner_emails)
+        df['phone'] = df['planner'].map(garden_grove_planner_phones)
+        
+        # Add city and recent update columns
+        df['city'] = 'Garden Grove'
+        df['recentUpdate'] = datetime.now().replace(day=1).strftime('%Y-%m-%d')
+        return df
+
+    def save_to_raw(self, path=None):
+        if not path:
+            path = RAW_DATA_DIR / 'gardengrove' / f'garden_grove_data_{GardenGroveScraper.current_date}.xlsx'
+        df = self.create_dataframe()
+        df.to_excel(path, index=False)
+
+def main_garden_grove():
+    driver = get_chrome_driver()
+    scraper = GardenGroveScraper(driver)
+    scraper.connect(GARDEN_GROVE_PLANNING_URL)
+    scraper.scrape_data()
+    df = scraper.create_dataframe()
+    scraper.save_to_raw()
+    driver.quit()
+    return df
