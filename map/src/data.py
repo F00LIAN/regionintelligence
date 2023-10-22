@@ -785,10 +785,14 @@ class FullertonScraper:
         # Replace '\n' with ' ' in the 'status' column
         df["status"] = df["status"].str.replace('\n', ' ')
 
+        # add the city column
         df['city'] = 'Fullerton'
 
+        # add the email column
         df['email'] = FULLERTON_PLANNING_OFFICE_EMAIL
 
+        # Add recentUpdate column with the first day of the current month for every row
+        df['recentUpdate'] = datetime.now().replace(day=1).strftime('%Y-%m-%d')
         return df
     
     def save_to_raw(self, path=None):
