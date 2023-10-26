@@ -1,1 +1,4 @@
 *.json
+.env
+env_variables.sh
+*.txt
