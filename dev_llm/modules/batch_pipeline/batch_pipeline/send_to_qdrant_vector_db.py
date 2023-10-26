@@ -207,13 +207,16 @@ class BuildingCodeProcessor:
             breakpoint()
         except Exception as e:
             logger.error(f"Error while embedding building codes into Qdrant: {e}")
+    
+    def send_to_s3(self):
+        pass
 
     def run(self):
         # Read from file and process the data
-        with open(self.CALIFORNIA_JSON_FILE, 'r') as json_file:
+        with open(TRAINING_DATA_DIR / self.CALIFORNIA_JSON_FILE, 'r') as json_file:
             building_codes_data = json.load(json_file)
         self.embed_building_codes_into_qdrant(building_codes_data)
-
+        pass
 
 
 
