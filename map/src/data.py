@@ -34,6 +34,8 @@ from src.const import (
     ANAHEIM_PLANNING_OFFICE_PHONE,
     FULLERTON_PLANNING_URL) 
 
+
+from src.logger import get_console_logger
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium import webdriver
@@ -54,7 +56,7 @@ from tqdm import tqdm
 from difflib import SequenceMatcher
 
 
-
+logger = get_console_logger()
 
 # Santa Ana Scraper
 class SantaAnaScraper:
@@ -404,6 +406,7 @@ def main_santa_ana():
     """
     SANTA ANA
     """
+    logger.info('Running Santa Ana scraper')
     # Instantiate the Chrome driver
     driver = get_chrome_driver()
     scraper = SantaAnaScraper(driver)
@@ -426,7 +429,8 @@ def main_santa_ana():
     print('Time to Concatenate and Save')
     # Concatenate all the data and save to processed data directory
     concat_and_save_all_santa_ana_data()
-    print('Done')
+    logger.info('Santa Ana scraper finished')
+    return df, print('Done')
 
 
 # City of Orange Scraper
@@ -603,6 +607,7 @@ def main_city_of_orange():
     """
     CITY OF ORANGE
     """
+    logger.info('Running Orange scraper')
     # Instantiate the Chrome driver
     driver = get_chrome_driver()
     scraper = OrangeScraper(driver)
@@ -616,11 +621,10 @@ def main_city_of_orange():
     df = scraper.process_recentUpdate_owner_column(df)
     scraper.save_to_processed(df)
     driver.close()
-
+    logger.info('Orange scraper finished')
+    return df, print('Orange Done')
 
 # City of Anaheim Scraper
-
-
 class AnaheimScraper:
 
     current_date = datetime.now().strftime('%Y-%m-%d')
@@ -668,7 +672,7 @@ class AnaheimScraper:
         df['city'] = 'Anaheim'
         df = df[['address', 'description', 'projectName', 'typeOfUse', 'status', 'owner', 'recentUpdate', 'email', 'phone', 'city']]
         #df['projectName'] = df['projectName'].apply(lambda x: re.sub(r'\[.*?\]\s*', '', x))
-        return df
+        return df, print('Anaheim Done')
 
     def run(self):
         # Reads the CSV
@@ -686,11 +690,15 @@ def main_anaheim():
     """
     CITY OF ANAHEIM
     """
+
+    logger.info('Running Anaheim scraper')
     scraper = AnaheimScraper()
     df = scraper.run()
     file_name = f"anaheim_city_data_{AnaheimScraper.current_date}.xlsx"
     path = PROCESSED_DATA_DIR / 'anaheim' / file_name
     df.to_excel(path, header=True)
+    logger.info('Anaheim scraper finished')
+
     return df, print('Anaheim Done')
 
 
@@ -801,20 +809,22 @@ class FullertonScraper:
         df['recentUpdate'] = datetime.now().replace(day=1).strftime('%Y-%m-%d')
         return df
     
-    def save_to_raw(self, path=None):
+    def save_to_processed(self, path=None):
         if not path:
-            path = RAW_DATA_DIR / 'fullerton' / f'fullerton_city_data_{FullertonScraper.current_date}.xlsx'
+            path = PROCESSED_DATA_DIR / 'fullerton' / f'fullerton_city_data_{FullertonScraper.current_date}.xlsx'
         df = self.create_dataframe()
         df.to_csv(path, index=False)
 
 def main_city_of_fullerton():
+    logger.info('Running Fullerton scraper')
     driver = get_chrome_driver()
     scraper = FullertonScraper(driver)
     scraper.connect(FULLERTON_PLANNING_URL)
     scraper.scrape_data()
     df = scraper.create_dataframe()
-    scraper.save_to_raw()
+    scraper.save_to_processed()
     driver.quit()
+    logger.info('Fullerton scraper finished')
     return df, print('Fullerton Done')
 
 # City of Garden Grove Scraper
@@ -932,18 +942,20 @@ class GardenGroveScraper:
         df['recentUpdate'] = datetime.now().replace(day=1).strftime('%Y-%m-%d')
         return df
 
-    def save_to_raw(self, path=None):
+    def save_to_processed(self, path=None):
         if not path:
-            path = RAW_DATA_DIR / 'gardengrove' / f'garden_grove_data_{GardenGroveScraper.current_date}.xlsx'
+            path = PROCESSED_DATA_DIR / 'gardengrove' / f'garden_grove_data_{GardenGroveScraper.current_date}.xlsx'
         df = self.create_dataframe()
         df.to_excel(path, index=False)
 
 def main_garden_grove():
+    logger.info('Running Garden Grove scraper')
     driver = get_chrome_driver()
     scraper = GardenGroveScraper(driver)
     scraper.connect(GARDEN_GROVE_PLANNING_URL)
     scraper.scrape_data()
     df = scraper.create_dataframe()
-    scraper.save_to_raw()
+    scraper.save_to_processed()
     driver.quit()
-    return df
+    logger.info('Garden Grove scraper finished')
+    return df, print("garden grove done")
