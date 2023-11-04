@@ -18,6 +18,9 @@ pandas = "^2.1.2"
 plotly = "^5.18.0"
 openai = "^0.28.1"
 langchain = "^0.0.325"
+psycopg2 = "^2.9.9"
+boto3 = "^1.28.73"
+nbformat = "^5.9.2"
 
 
 [build-system]

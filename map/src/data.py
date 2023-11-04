@@ -7,12 +7,13 @@ import os
 from src.driver_config import get_chrome_driver, navigate_and_print_title
 from src.const import (
     SANTA_ANA_PLANNING_OFFICE_NAME, 
+    ANAHEIM_PLANNING_OFFICE_NAME,
     SANTA_ANA_PLANNING_URL,
     GARDEN_GROVE_PLANNING_URL, 
     SANTA_ANA_PLANNING_OFFICE_EMAIL, 
     SANTA_ANA_PLANNING_OFFICE_PHONE,
     FULLERTON_PLANNING_OFFICE_EMAIL)
-from src.paths import RAW_DATA_DIR, PROCESSED_DATA_DIR
+from src.paths import RAW_DATA_DIR, PROCESSED_DATA_DIR, FINAL_DATA_DIR, COMPANY_DATA_DIR
 
 from src.const import (
     orange_planner_phones, 
@@ -206,7 +207,7 @@ class SantaAnaScraper:
 
             # Remove unnecessary strings
             self.df["name"] = (
-                self.df["name"].str.replace("Project Manager:", "").str.strip()
+                self.df["name"].str.replace("Assigned Planner:", "").str.strip()
             )
             self.df["phone"] = self.df["phone"].str.strip()
             self.df["email"] = self.df["email"].str.strip()
@@ -226,16 +227,23 @@ class SantaAnaScraper:
         self.df["email"] = self.df["email"].apply(clean_email)
 
         # Drop the 'Rest' and 'Planner/Manager' columns as they are not needed anymore
-        self.df.drop(["Rest", "planner"], axis=1, inplace=True)
+        self.df.drop(["Rest"], axis=1, inplace=True)
 
             # Group by 'Name', then fill missing 'Phone' and 'Email' with the mode value in each group
         self.df["phone"] = self.df.groupby("name")["phone"].transform(
-                lambda x: x.fillna(x.mode().iloc[0] if not x.mode().empty else "Unknown")
+                lambda x: x.fillna(x.mode().iloc[0] if not x.mode().empty else SANTA_ANA_PLANNING_OFFICE_PHONE)
             )
         self.df["email"] = self.df.groupby("name")["email"].transform(
-                lambda x: x.fillna(x.mode().iloc[0] if not x.mode().empty else "Unknown")
+                lambda x: x.fillna(x.mode().iloc[0] if not x.mode().empty else SANTA_ANA_PLANNING_OFFICE_EMAIL)
             )
+    
+    
+    def adjust_project_columns(self):
+        self.df['planner'] = self.df['name']
+        self.df.drop(columns=['name'], inplace=True)
+        self.df['planner'].fillna(SANTA_ANA_PLANNING_OFFICE_NAME, inplace=True)
 
+        
     def save_to_raw(self, file_name_prefix="santa-ana-current-projects"):
         """
         Save the DataFrame to an Excel file in the RAW_DATA_DIR / 'santana' directory.
@@ -255,12 +263,12 @@ class SantaAnaScraper:
                 "projectName": self.listing_names,
                 "address": self.project_locations,
                 "applicantName": self.planner_leads,
-                "owner": self.property_owner,
+                "applicantName": self.property_owner,
                 "imageURL": self.all_images_urls,
                 "status": self.project_status,
                 "description": self.project_descriptions,
                 "planner": self.contact_information,
-                "lastUpdate": self.last_project_update,
+                "recentUpdate": self.last_project_update,
             }
         )
         return self.df
@@ -327,7 +335,7 @@ class SantaAnaPDFParser:
         return concatenated_df
     
     def add_name_phone_email(self, df):
-        df['name'] = SANTA_ANA_PLANNING_OFFICE_NAME
+        df['planner'] = SANTA_ANA_PLANNING_OFFICE_NAME
         df['phone'] = SANTA_ANA_PLANNING_OFFICE_PHONE
         df['email'] = SANTA_ANA_PLANNING_OFFICE_EMAIL
         df['imageURL'] = ''
@@ -342,7 +350,7 @@ class SantaAnaPDFParser:
                 "Address and Council Ward": "address",
                 "Application Type": "status",
                 "Description": "description",
-                "Date Accepted": "lastUpdate"}, inplace=True)
+                "Date Accepted": "recentUpdate"}, inplace=True)
         return df
     
     def _merge_rows(self, data):
@@ -385,22 +393,70 @@ class SantaAnaPDFParser:
         THIS SAVES SANTA ANA APPROVED DATA TO RAW DATA DIRECTORY
         """
         current_date = datetime.now().strftime('%Y-%m-%d')
+        # Optional Save Owner information to company database
+
+        # drop the owner column for production
+        
+        
+        
         file_name = f"{file_name_prefix}_{current_date}.xlsx"
         path = RAW_DATA_DIR / 'santana' / file_name
         df.to_excel(path, header=True)
-    
+        return df
+
 
 def concat_and_save_all_santa_ana_data():
     files = glob.glob(f"{RAW_DATA_DIR}/santana/*.xlsx")
-    dfs = [pd.read_excel(file) for file in files]
-    df = pd.concat(dfs, ignore_index=True)
-    df.drop(columns=['Unnamed: 0'], inplace=True)
-    df.drop_duplicates(inplace=True)
-    # Save the data to the processed data directory
+    
     current_date = datetime.now().strftime('%Y-%m-%d')
+    
+    # Form the file names using f-strings
+    latest_approved = f"santa-ana-approved_{current_date}.xlsx"
+    latest_projects = f"santa-ana-current-projects_{current_date}.xlsx"
+    
+    # Check if the files are in the list of files
+    latest_approved = next((file for file in files if latest_approved in file), None)
+    latest_projects = next((file for file in files if latest_projects in file), None)
+    
+    # If either of the latest files isn't found, return None
+    if not latest_approved or not latest_projects:
+        print("Unable to find latest Excel files for both prefixes.")
+        return None
+
+    # Load and concatenate the dataframes
+    dfs = [pd.read_excel(latest_approved), pd.read_excel(latest_projects)]
+    df = pd.concat(dfs, ignore_index=True)
+    
+    if 'Unnamed: 0' in df.columns:
+        df.drop(columns=['Unnamed: 0'], inplace=True)
+    
+    # Assuming 'projectName' column exists and needs to be de-duplicated
+    if 'projectName' in df.columns:
+        df['projectName'].drop_duplicates(inplace=True)
+    
+    
+    # save the data with the owner column to the company database
+    # save the data with the applicant Name to the company database
+    # Save the data to the processed data directory
     file_name = f"santa_ana_data_{current_date}.xlsx"
-    df.to_excel(PROCESSED_DATA_DIR / 'santaana' / file_name, header=True)
+    path = Path(COMPANY_DATA_DIR) / 'santana' / file_name
+    df.to_excel(path, header=True)
+
+    # drop the applicantName column for production
+    df.drop(columns=['owner'], inplace=True)
+    df.drop(columns=['applicantName'], inplace=True)
+    df.drop(columns=['imageURL'], inplace=True)
+
+    # fill null values in planner column with Santa Ana Planning Office
+    df['planner'].fillna(SANTA_ANA_PLANNING_OFFICE_NAME, inplace=True)
+
+    # Save the data to the processed data directory
+    file_name = f"santa_ana_data_{current_date}.xlsx"
+    path = Path(PROCESSED_DATA_DIR) / 'santana' / file_name
+    df.to_excel(path, header=True)
+    
     return df
+
 
 def main_santa_ana():
     """
@@ -416,6 +472,8 @@ def main_santa_ana():
     scraper.scrape_detailed_info()
     df = scraper.create_dataframe()
     scraper.clean_data()
+    scraper.adjust_project_columns()
+    
     scraper.save_to_raw()
     driver.close()
 
@@ -426,12 +484,12 @@ def main_santa_ana():
     df = parser.add_name_phone_email(df)
     df = parser.change_column_names(df)
     parser.save_to_raw(df)
-    print('Time to Concatenate and Save')
-    # Concatenate all the data and save to processed data directory
-    concat_and_save_all_santa_ana_data()
-    logger.info('Santa Ana scraper finished')
-    return df, print('Done')
 
+    logger.info('Concatenating and saving all Santa Ana data')
+    concat_and_save_all_santa_ana_data()
+    
+    logger.info('Santa Ana scraper finished')
+    return df
 
 # City of Orange Scraper
 
@@ -454,13 +512,15 @@ class OrangeScraper:
             accordion_link = WebDriverWait(self.driver, 10).until(
                 EC.presence_of_element_located((By.CLASS_NAME, "accordion-heading"))
             )
-            accordion_link.click()
 
+            accordion_link.click()
+            time.sleep(3)
             pdf_link = WebDriverWait(self.driver, 10).until(
                 EC.presence_of_element_located((By.LINK_TEXT, "Current Pending Land Use Applications List"))
             )
+            time.sleep(3)
             pdf_link.click()
-
+            time.sleep(3)
             pdf_url = pdf_link.get_attribute("href")
             self.pdf_urls.append(pdf_url)
             
@@ -470,7 +530,7 @@ class OrangeScraper:
     def parse_orange_pdf(self, pdf_path=None):
         if not pdf_path:
             pdf_path = RAW_DATA_DIR / 'orange' / f'orange_city_data_{OrangeScraper.current_date}.pdf'
-            
+        time.sleep(3)    
         # Open the PDF
         with pdfplumber.open(pdf_path) as pdf:
             all_data = []
@@ -494,19 +554,24 @@ class OrangeScraper:
             print("No PDFs found to download!")
             return
 
-        # Use the class variable here
         file_name = f"orange_city_data_{OrangeScraper.current_date}.pdf"
-
         orange_dir = os.path.join(directory, 'orange')
         if not os.path.exists(orange_dir):
             os.makedirs(orange_dir)
 
         for url in self.pdf_urls:
-            response = requests.get(url)
+            headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.3'}
+            response = requests.get(url, headers=headers, stream=True)
+
+            # Check if the request was successful
+            response.raise_for_status()
+
             with open(os.path.join(orange_dir, file_name), "wb") as f:
-                f.write(response.content)
-        
+                for chunk in response.iter_content(chunk_size=8192):
+                    f.write(chunk)
+
         return os.path.join(orange_dir, file_name)
+
     
     def clean_orange_pdf(self, df):
         # Convert all None values to NaN
@@ -574,6 +639,11 @@ class OrangeScraper:
         df = df.dropna(subset=['projectName'])
         return df
     
+    def save_to_company_database(self, df, path=None):
+        if not path:
+            path = COMPANY_DATA_DIR / 'orange' / f'orange_city_data_{OrangeScraper.current_date}.xlsx'
+        df.to_excel(path, index=False)
+    
     def save_to_processed(self, df):
         # Use the class variable here
         file_name = f"orange_city_data_{OrangeScraper.current_date}.xlsx"
@@ -619,10 +689,21 @@ def main_city_of_orange():
     df = scraper.refine_drop_empty_name_rows(df)
     df = scraper.process_plannernames(df)
     df = scraper.process_recentUpdate_owner_column(df)
+
+    # add city column
+    df['city'] = 'Orange'
+
+    # Optional Save owner information to company database
+    scraper.save_to_company_database(df)
+
+    # drop the owner column 
+    df.drop(columns=['owner'], inplace=True)
+    
+
     scraper.save_to_processed(df)
     driver.close()
     logger.info('Orange scraper finished')
-    return df, print('Orange Done')
+    return df
 
 # City of Anaheim Scraper
 class AnaheimScraper:
@@ -644,8 +725,8 @@ class AnaheimScraper:
         return os.path.join(path, latest_file)
 
     def read_anaheim_csv(self):
-        anaheim_path = self.get_most_recent_file(RAW_DATA_DIR / 'anaheim', 'AndysMap')
-        dev_apps_path = self.get_most_recent_file(RAW_DATA_DIR / 'anaheim', 'dev_apps')
+        anaheim_path = self.get_most_recent_file(RAW_DATA_DIR / 'anaheim', 'AndysMap.csv')
+        dev_apps_path = self.get_most_recent_file(RAW_DATA_DIR / 'anaheim', 'dev_apps.csv')
         if not anaheim_path or not dev_apps_path:
             raise Exception("Couldn't find the required files!")
         self.current_projects_df = pd.read_csv(anaheim_path)
@@ -655,11 +736,14 @@ class AnaheimScraper:
         if 'Staff Name' in df.columns:
             df['email'] = df['Staff Name'].map(anaheim_planner_emails)
             df['phone'] = df['Staff Name'].map(anaheim_planner_phones)
+            df['planner'] = df['Staff Name'].map(anaheim_planner_names) 
             df['email'].fillna(ANAHEIM_PLANNING_OFFICE_EMAIL, inplace=True)
             df['phone'].fillna(ANAHEIM_PLANNING_OFFICE_PHONE, inplace=True)
+            df['planner'] = df['planner'].fillna(ANAHEIM_PLANNING_OFFICE_NAME)
         else:
             df['email'] = ANAHEIM_PLANNING_OFFICE_EMAIL
             df['phone'] = ANAHEIM_PLANNING_OFFICE_PHONE
+            df['planner'] = ANAHEIM_PLANNING_OFFICE_NAME
         df.rename(columns={
             'Address': 'address',
             'Description': 'description',
@@ -670,36 +754,48 @@ class AnaheimScraper:
             'Opened Date': 'recentUpdate'
         }, inplace=True)
         df['city'] = 'Anaheim'
-        df = df[['address', 'description', 'projectName', 'typeOfUse', 'status', 'owner', 'recentUpdate', 'email', 'phone', 'city']]
+        df = df[['address', 'description', 'projectName', 'typeOfUse', 'status', 'owner', 'recentUpdate', 'email', 'phone', 'city', 'planner']]
         #df['projectName'] = df['projectName'].apply(lambda x: re.sub(r'\[.*?\]\s*', '', x))
-        return df, print('Anaheim Done')
+
+        # Optional Save owner information to company database
+        path = COMPANY_DATA_DIR / 'anaheim' / f'anaheim_city_data_{AnaheimScraper.current_date}.xlsx'
+        df.to_excel(path, index=False)
+
+        df.drop(columns=['owner'], inplace=True)
+        return df
+    
+    def save_to_processed(self, df, path):   
+        df.to_excel(path, header=True)
 
     def run(self):
+
+        # define the path and file name
+        file_name = f"anaheim_city_data_{AnaheimScraper.current_date}.xlsx"
+        path = PROCESSED_DATA_DIR / 'anaheim' / file_name
+
         # Reads the CSV
         self.read_anaheim_csv()
 
         # Processes the first dataframe
         self.current_projects_df = self.process_the_dataframe(self.current_projects_df)
-
+        self.save_to_processed(self.current_projects_df, path)
+        
         # (Optional) Processes the second dataframe, etc.
 
         # Returns the processed dataframe for further operations or analysis
         return self.current_projects_df
 
+
 def main_anaheim():
     """
     CITY OF ANAHEIM
     """
-
     logger.info('Running Anaheim scraper')
     scraper = AnaheimScraper()
     df = scraper.run()
-    file_name = f"anaheim_city_data_{AnaheimScraper.current_date}.xlsx"
-    path = PROCESSED_DATA_DIR / 'anaheim' / file_name
-    df.to_excel(path, header=True)
     logger.info('Anaheim scraper finished')
+    return df
 
-    return df, print('Anaheim Done')
 
 
 # City of Fullertron Scraper
@@ -727,6 +823,7 @@ class FullertonScraper:
         print(self.driver.title)
 
     def scrape_data(self):
+        time.sleep(3)
         try:
             main = WebDriverWait(self.driver, 10).until(
                 EC.presence_of_element_located((By.CLASS_NAME, "govAccess-reTable-4"))
@@ -771,7 +868,7 @@ class FullertonScraper:
                 "address": self.project_locations,
                 "planner": self.planner_leads,
                 "status": self.project_status,
-                "type_of_use": self.type_of_use,
+                "typeOfUse": self.type_of_use,
                 "description": description
             }
         )
@@ -809,23 +906,31 @@ class FullertonScraper:
         df['recentUpdate'] = datetime.now().replace(day=1).strftime('%Y-%m-%d')
         return df
     
+    def save_to_company_database(self, path=None):
+        if not path:
+            path = COMPANY_DATA_DIR / 'fullerton' / f'fullerton_city_data_{FullertonScraper.current_date}.xlsx'
+        df = self.create_dataframe()
+        df.to_excel(path, index=False)
+    
     def save_to_processed(self, path=None):
         if not path:
             path = PROCESSED_DATA_DIR / 'fullerton' / f'fullerton_city_data_{FullertonScraper.current_date}.xlsx'
         df = self.create_dataframe()
-        df.to_csv(path, index=False)
+        df.to_excel(path, index=False)
 
 def main_city_of_fullerton():
     logger.info('Running Fullerton scraper')
     driver = get_chrome_driver()
     scraper = FullertonScraper(driver)
     scraper.connect(FULLERTON_PLANNING_URL)
+    time.sleep(3)
     scraper.scrape_data()
-    df = scraper.create_dataframe()
+    scraper.create_dataframe()
     scraper.save_to_processed()
     driver.quit()
     logger.info('Fullerton scraper finished')
-    return df, print('Fullerton Done')
+    scraper.save_to_company_database()
+    
 
 # City of Garden Grove Scraper
 
@@ -904,13 +1009,14 @@ class GardenGroveScraper:
 
         except Exception as e:
             print(f"An error occurred: {e}")
-
+        print(self.listing_names)
+        
     def create_dataframe(self):
         df = pd.DataFrame(
             {
-                "projectNames": self.listing_names,
-                #"Image_URLs": self.image_urls,
-                #"caseNumbers": self.case_number_texts,
+                "projectName": self.listing_names,
+                "Image_URLs": self.image_urls,
+                "caseNumbers": self.case_number_texts,
                 "address": self.project_locations,
                 "planner": self.planner_leads,
                 "description": self.project_descriptions,
@@ -941,12 +1047,21 @@ class GardenGroveScraper:
         df['city'] = 'Garden Grove'
         df['recentUpdate'] = datetime.now().replace(day=1).strftime('%Y-%m-%d')
         return df
+    
+    def save_to_company_database(self, path=None):
+        if not path:
+            path = COMPANY_DATA_DIR / 'gardengrove' / f'garden_grove_data_{GardenGroveScraper.current_date}.xlsx'
+        df = self.create_dataframe()
+        df.to_excel(path, index=False)
 
     def save_to_processed(self, path=None):
         if not path:
             path = PROCESSED_DATA_DIR / 'gardengrove' / f'garden_grove_data_{GardenGroveScraper.current_date}.xlsx'
         df = self.create_dataframe()
+        # drop the image urls, case numbers columns for production
+        df.drop(columns=['imageURLs', 'caseNumbers'], inplace=True)
         df.to_excel(path, index=False)
+
 
 def main_garden_grove():
     logger.info('Running Garden Grove scraper')
@@ -955,7 +1070,9 @@ def main_garden_grove():
     scraper.connect(GARDEN_GROVE_PLANNING_URL)
     scraper.scrape_data()
     df = scraper.create_dataframe()
+    scraper.save_to_company_database()
     scraper.save_to_processed()
     driver.quit()
     logger.info('Garden Grove scraper finished')
-    return df, print("garden grove done")
+    
+    return df

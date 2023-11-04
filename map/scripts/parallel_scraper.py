@@ -18,5 +18,3 @@ def run_all_scrapers():
         executor.submit(main_city_of_fullerton)
         executor.submit(main_garden_grove)
     logger.info('All scrapers finished')
-
-run_all_scrapers()
