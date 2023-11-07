@@ -21,6 +21,8 @@ langchain = "^0.0.325"
 psycopg2 = "^2.9.9"
 boto3 = "^1.28.73"
 nbformat = "^5.9.2"
+pickleshare = "^0.7.5"
+lxml = "^4.9.3"
 
 
 [build-system]

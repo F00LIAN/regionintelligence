@@ -5,35 +5,61 @@ import re
 import os
 
 from src.driver_config import get_chrome_driver, navigate_and_print_title
+
+from src.const import (    
+    SANTA_ANA_PLANNING_OFFICE_EMAIL, 
+    FULLERTON_PLANNING_OFFICE_EMAIL,
+    ANAHEIM_PLANNING_OFFICE_EMAIL,
+    IRVINE_PLANNING_OFFICE_EMAIL,
+    HUNTINGTON_BEACH_PLANNING_OFFICE_EMAIL,
+    )
+
+from src.const import (
+    HUNTINGTON_BEACH_PLANNING_OFFICE_PHONE,
+    ANAHEIM_PLANNING_OFFICE_PHONE,
+    SANTA_ANA_PLANNING_OFFICE_PHONE,
+    IRVINE_PLANNING_OFFICE_PHONE,
+)
+
+from src.const import (
+    SANTA_ANA_PLANNING_URL,
+    HUNTINGTON_BEACH_PLANNING_URL,
+    GARDEN_GROVE_PLANNING_URL,
+    ORANGE_PLANNING_URL,
+    FULLERTON_PLANNING_URL,
+    IRVINE_MAJOR_PLANNING_URL,
+)
 from src.const import (
     SANTA_ANA_PLANNING_OFFICE_NAME, 
     ANAHEIM_PLANNING_OFFICE_NAME,
-    SANTA_ANA_PLANNING_URL,
-    GARDEN_GROVE_PLANNING_URL, 
-    SANTA_ANA_PLANNING_OFFICE_EMAIL, 
-    SANTA_ANA_PLANNING_OFFICE_PHONE,
-    FULLERTON_PLANNING_OFFICE_EMAIL)
-from src.paths import RAW_DATA_DIR, PROCESSED_DATA_DIR, FINAL_DATA_DIR, COMPANY_DATA_DIR
+    HUNTINGTON_BEACH_PLANNING_OFFICE_NAME,
+    GARDEN_GROVE_PLANNING_OFFICE_NAME,
+    IRVINE_PLANNING_OFFICE_NAME,
+
+)
 
 from src.const import (
     orange_planner_phones, 
     orange_planner_emails, 
     orange_planner_names, 
-    ORANGE_PLANNING_URL,
+   
     fullerton_planner_names,
     fullerton_planner_phones,
+
     garden_grove_planner_emails,
     garden_grove_planner_names,
     garden_grove_planner_phones,
-    )
 
-from src.const import (
+    hb_planner_emails,
+    hb_planner_names,
+
     anaheim_planner_emails, 
     anaheim_planner_phones, 
     anaheim_planner_names, 
-    ANAHEIM_PLANNING_OFFICE_EMAIL, 
-    ANAHEIM_PLANNING_OFFICE_PHONE,
-    FULLERTON_PLANNING_URL) 
+
+    )
+
+from src.paths import RAW_DATA_DIR, PROCESSED_DATA_DIR, FINAL_DATA_DIR, COMPANY_DATA_DIR
 
 
 from src.logger import get_console_logger
@@ -46,6 +72,7 @@ from selenium.webdriver.common.by import By
 import openpyxl
 
 from pathlib import Path
+from urllib.parse import urlparse
 from datetime import datetime, timedelta
 import requests
 from pdb import set_trace as stop
@@ -1076,3 +1103,368 @@ def main_garden_grove():
     logger.info('Garden Grove scraper finished')
     
     return df
+
+# City of Huntington Beach Scraper
+
+
+class HuntingtonBeachScraper:
+    current_date = datetime.now().strftime("%Y-%m-%d")
+
+    def __init__(self, driver, url, original_df):
+        self.driver = driver
+        self.url = url
+        self.original_df = original_df
+    
+    def fetch_initial_data(self):
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'}
+
+        response = requests.get(self.url, headers=headers)
+
+        if response.status_code == 200:
+            df_list = pd.read_html(response.text)
+            self.original_df = df_list[2]
+        else:
+            print("Failed to retrieve the webpage. Status Code:", response.status_code)
+            self.original_df = pd.DataFrame()
+
+    def extract_project_info(self):
+        WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.ID, "middle"))
+        )
+        
+        project_data = {}
+        middle_div = self.driver.find_element(By.ID, 'middle')
+        middle_div_text = middle_div.text
+        project_summary_match = re.search(r'Project Summary\s*(.*)', middle_div_text, re.DOTALL)
+        paragraphs = middle_div.find_elements(By.TAG_NAME, 'p')
+        
+        for paragraph in paragraphs:
+            text = paragraph.text
+            if 'Last Updated:' in text:
+                project_data['recentUpdate'] = text.split('Last Updated:', 1)[1].strip()
+            elif 'Project Planner:' in text:
+                project_data['planner'] = text.split('Project Planner:', 1)[1].strip()
+            elif 'Project Status:' in text:
+                project_data['projectStatus'] = text.split('Project Status:', 1)[1].strip()
+
+        if project_summary_match:
+            project_data['description'] = project_summary_match.group(1).strip()
+
+        return pd.DataFrame([project_data])
+
+    def click_project_titles(self):
+        all_project_data = pd.DataFrame()
+        
+        for title in self.original_df['Project Title'].tolist():
+            try:
+                link = WebDriverWait(self.driver, 10).until(
+                    EC.presence_of_element_located((By.LINK_TEXT, title))
+                )
+                link.click()
+                project_df = self.extract_project_info()
+                all_project_data = pd.concat([all_project_data, project_df], ignore_index=True)
+                self.driver.back()
+                WebDriverWait(self.driver, 10).until(
+                    EC.presence_of_element_located((By.ID, 'middle'))
+                )
+                time.sleep(2)
+                
+            except Exception as e:
+                print(f"An error occurred while trying to click on the title '{title}': {e}")
+        
+        return all_project_data
+
+    def merge_and_clean(self):
+        self.driver.get(self.url)
+        collected_data = self.click_project_titles()
+        collected_data.set_index(self.original_df.index, inplace=True)
+        final_df = self.original_df.join(collected_data)
+        final_df.drop(columns=[col for col in final_df.columns if col not in ['Project Title', 'planner', 'projectStatus', 'description', 'recentUpdate']], inplace=True)
+        final_df.rename(columns={'Project Title': 'projectName', 'Applicant': 'owner', 'Address': 'address', 'Project Planner': 'planner', 'Project Status': 'projectStatus', 'Project Summary': 'description', 'Last Updated': 'recentUpdate'}, inplace=True)
+        final_df['city'] = 'Huntington Beach'
+        final_df['phone'] = HUNTINGTON_BEACH_PLANNING_OFFICE_PHONE
+        final_df['email'] = final_df['planner'].map(hb_planner_emails)
+        self.final_df = final_df
+    
+    def save_to_company(self, path = None):
+        if not Path: 
+            path = COMPANY_DATA_DIR / 'huntingtonbeach' / f'huntington_beach_data_{HuntingtonBeachScraper.current_date}.xlsx' 
+        self.final_df.to_excel(path, index=False)
+
+    def save_to_processed(self, path = None):
+        if not Path: 
+            path = PROCESSED_DATA_DIR / 'huntingtonbeach' / f'huntington_beach_data_{HuntingtonBeachScraper.current_date}.xlsx' 
+        self.final_df.to_excel(path, index=False)
+
+# Example usage
+def main_huntington_beach():
+    url = HUNTINGTON_BEACH_PLANNING_URL
+    # Example usage
+    driver = get_chrome_driver()
+    collector = HuntingtonBeachScraper(driver, url)
+    collector.merge_and_clean()
+    collector.save_to_company()  # Save without specifying a path will use the default
+    collector.save_to_processed()  # Save without specifying a path will use the default
+    driver.quit()
+
+# City of Irvine Scraper
+
+class IrvineScraper:
+    def __init__(self, driver):
+        self.driver = driver
+        self.current_date = datetime.now().strftime("%Y-%m-%d")
+        self.raw_data_dir = RAW_DATA_DIR / 'irvine'
+        self.processed_data_dir = PROCESSED_DATA_DIR / 'irvine'
+    
+    def ensure_directories_exist(self):
+        if not os.path.exists(self.raw_data_dir):
+            os.makedirs(self.raw_data_dir)
+        if not os.path.exists(self.processed_data_dir):
+            os.makedirs(self.processed_data_dir)
+    
+    def connect(self, url):
+        self.driver.get(url)
+        print(self.driver.title)
+
+    @staticmethod
+    def contains_date(s):
+        return bool(re.match(r'\d{1,2}/\d{1,2}/\d{4}', s))
+    
+    @staticmethod
+    def extract_schedule_decision_planner(details):
+        # Indices for 'Schedule', 'Decision Maker', and 'Planner' assuming they are at the end
+        # The -1 index will fetch the last word from the list which is assumed to be 'Planner'
+        planner_index = -1
+        # The -2 index will fetch the second last word from the list which is assumed to be 'Decision Maker'
+        decision_maker_index = -2
+        # The -3 index will fetch the third last word from the list which is assumed to be 'Schedule'
+        schedule_index = -3
+    
+        #    We want everything before 'Schedule' to be part of the project description
+        project_description = ' '.join(details[:schedule_index])
+        schedule = details[schedule_index]
+        decision_maker = details[decision_maker_index]
+        planner = details[planner_index]
+    
+        return project_description, schedule, decision_maker, planner
+    
+    @staticmethod
+    def process_text(text):
+        lines = text.strip().split("\n")
+        projects = []
+        project_title = None
+
+        for line in lines:
+            if line.startswith("CURRENT DISCRETIONARY PROJECTS UNDER REVIEW"):
+                continue
+            if not IrvineScraper.contains_date(line.strip()):
+                project_title = line.strip()
+            else:
+                details = line.strip().split()
+                if len(details) > 3 and project_title:
+                    project_description, schedule, decision_maker, planner = IrvineScraper.extract_schedule_decision_planner(details)
+                    project_data = {
+                    'Submittal Date': details[0],
+                    'File #': details[1],
+                    'PA': details[2],
+                    'Project Description': project_description,
+                    'Schedule': schedule,
+                    'Decision Maker': decision_maker,
+                    'Planner': planner,
+                    'Project Title': project_title
+                    }
+                    projects.append(project_data)
+                    project_title = None  # Reset project title for the next block
+
+        return projects
+
+    @staticmethod
+    def create_dataframe(projects):
+        return pd.DataFrame(projects)
+
+
+    def scrape_pdf(self):
+        try:
+            # Click the link to open in a new tab
+            link = WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((By.PARTIAL_LINK_TEXT, "Discretionary Project List"))
+            )
+            link.click()
+            print("Navigated to the Discretionary Project List")
+
+            # Switch to the new tab and wait for it to load
+            WebDriverWait(self.driver, 10).until(lambda d: len(d.window_handles) > 1)
+            self.driver.switch_to.window(self.driver.window_handles[1])
+            time.sleep(5)  # Adjust time as needed
+
+            # Get the URL of the new tab
+            pdf_url = self.driver.current_url
+
+            # Sanitize the URL if it has been duplicated
+            if pdf_url.count('BlobID=') > 1:
+                pdf_url = pdf_url.split('&')[0]
+
+            print(f"PDF should be available at: {pdf_url}")
+
+            # Send a GET request to the PDF URL using requests
+            response = requests.get(pdf_url)
+            
+            
+            if response.status_code == 200:
+                if not os.path.exists(self.raw_data_dir):
+                    os.makedirs(self.raw_data_dir)
+
+                    filename = f"irvine_major_planning_{self.current_date}.pdf"
+
+                    # Write the PDF content to a file in RAW_DATA_DIR
+                    file_path = os.path.join(self.raw_data_dir, filename)
+
+                    with open(file_path, 'wb') as f:
+                        f.write(response.content)
+                    print(f"PDF has been saved to {file_path}")
+                else:
+                    print(f"Failed to download the PDF. Status code: {response.status_code}")
+            
+            # Close the PDF tab
+            self.driver.close()
+
+            # Switch back to the original tab
+            self.driver.switch_to.window(self.driver.window_handles[0])
+                
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
+    def wait_for_download_to_complete(self, file_pattern):
+        """ Wait for the download to complete """
+        print("Waiting for download to complete...")
+        timeout = 120  # 2 minutes timeout
+        while timeout > 0:
+            files = os.listdir()
+            if any(f.startswith(file_pattern) for f in files):
+                print("Download completed.")
+                return
+            time.sleep(1)
+            timeout -= 1
+        print("Download did not complete within the allotted time.")
+    
+    @staticmethod
+    def parse_pdf(pdf_filename):
+        try:
+            with pdfplumber.open(pdf_filename) as pdf:
+                full_text = "\n".join(page.extract_text() or "" for page in pdf.pages)
+            print(full_text)
+        except Exception as e:
+            print(f"An error occurred while parsing the PDF: {e}")
+    
+    def clean_and_rename_data(self, df):
+        """Clean and rename the data of the DataFrame."""
+        self.rename_columns(df)
+        self.clean_description_column(df)
+        self.add_additional_columns(df)
+        self.fix_project_titles(df)
+        self.drop_unnecessary_columns_and_clean(df)
+
+    def drop_unnecessary_columns_and_clean(self, df):
+         # Drop Columns 
+        df.drop(columns=['Submittal Date', 'file_number', 'pa'], inplace=True)
+
+    def rename_columns(self, df):
+        """Rename columns in the DataFrame."""
+        df.rename(columns={
+            'Submittal Date': 'recentUpdate',
+            'File #': 'file_number',
+            'PA': 'pa',
+            'Project Description': 'description',
+            'Schedule': 'schedule',
+            'Decision Maker': 'decision_maker',
+            'Planner': 'planner',
+            'Project Title': 'projectName'
+        }, inplace=True)
+
+    def save_to_company_database(self, df, path=None):
+        """Save the DataFrame to a CSV file."""
+        if not path:
+            path = COMPANY_DATA_DIR / 'irvine' / f'irvine_city_data_{self.current_date}.xlsx'
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        df.to_excel(path, index=False)
+        print(f"Company file saved to {path}")
+
+    def clean_description_column(self, df):
+        """Clean the 'description' column in the DataFrame."""
+        df['description'] = df['description'].apply(self.clean_description)
+
+        # Drop rows with empty 'description', if required
+        df.drop(df[df['description'] == ''].index, inplace=True)
+
+    def add_additional_columns(self, df):
+        """Add additional columns to the DataFrame."""
+        df['city'] = 'Irvine'
+        df['planner'] = df['plannerFirst'] + ' ' + df['plannerLast']
+        df['email'] = IRVINE_PLANNING_OFFICE_EMAIL
+        df['phone'] = IRVINE_PLANNING_OFFICE_PHONE
+        df['address'] = df['projectName']
+
+        # project status is unknown
+        df['status'] = 'Unknown'
+
+        # drop project planner first and last name columns
+        df.drop(columns=['plannerFirst', 'plannerLast'], inplace=True)
+
+    def fix_project_titles(self, df):
+        """Fix 'projectName' column in the DataFrame."""
+        df['projectName'] = df.apply(self.fix_project_title, axis=1)
+    
+    # Function to clean the description
+    @staticmethod
+    def clean_description(description):
+    # Remove 'TBD'
+        description = description.replace('TBD', '')
+    # Remove the date using regex
+        description = re.sub(r'\d+/\d+/\d+', '', description).strip()
+        # Remove file number using regex
+        description = re.sub(r'\b\d{8}-[A-Z]{3,4}\b', '', description).strip()
+        # Remove PA number using regex
+        description = re.sub(r'^\d+\s+(?=[A-Z])', '', description)
+
+        return description
+
+    @staticmethod
+    def fix_project_title(row):
+    # Check if the project_title is the exact problematic string
+        if row['project_title'] == 'Submittal Date File # PA Project Description Schedule Decision Maker Planner':
+        # Replace with 'PA #' followed by the pa value
+            return 'PA ' + str(row['pa'])
+        else:
+        # If not, return the original project_title
+            return row['project_title']
+        
+    def process_and_save_dataframe(self, projects):
+        try:
+            project_df = self.create_dataframe(projects)
+            self.clean_and_rename_data(project_df)
+            self.save_to_processed(project_df)
+        except Exception as e:
+            print(f"An error occurred while processing data: {e}")
+    
+    def save_to_processed(self, df):
+        """Save the DataFrame to a CSV file."""
+        save_path = os.path.join(self.processed_data_dir, 'irvine', f'irvine_city_data_{self.current_date}.xlsx')
+        os.makedirs(os.path.dirname(save_path), exist_ok=True)
+        df.to_excel(save_path, index=False)
+        print(f"Processed file saved to {save_path}")
+    
+def main_irvine_scraper():
+    current_date = datetime.now().strftime("%Y-%m-%d")
+    logger.info('Running Irvine scraper')
+    driver = get_chrome_driver()
+    scraper = IrvineScraper(driver)
+    scraper.connect(IRVINE_MAJOR_PLANNING_URL)
+    scraper.scrape_pdf()
+    scraper.wait_for_download_to_complete('irvine_major_planning')
+    scraper.parse_pdf(f'irvine_major_planning_{current_date}.pdf')
+    projects = scraper.process_text(f'irvine_major_planning_{current_date}.pdf')
+    scraper.save_to_company_database(projects)
+    scraper.process_and_save_dataframe(projects)
+    driver.quit()
+    logger.info('Irvine scraper finished') 

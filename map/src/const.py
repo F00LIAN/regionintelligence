@@ -418,6 +418,7 @@ GARDEN_GROVE_PLANNING_URL = "https://ggcity.org/planning/current-projects"
 
 GARDEN_GROVE_PLANNING_OFFICE_EMAIL = 'info@ggcity.org'
 
+GARDEN_GROVE_PLANNING_OFFICE_NAME = 'Garden Grove Planning Office'
 
 GARDEN_GROVE_PLANNING_OFFICE_PHONE = '(714)741-5312'
 
@@ -465,3 +466,118 @@ garden_grove_planner_emails = {
     GARDEN_GROVE_PRIIT_KASKLA_NAME: GARDEN_GROVE_PRIIT_KASKLA_EMAIL
 
 }
+
+## Jurupa  Valley constants
+
+JURUPA_VALLEY_PLANNING_URL = "https://www.jurupavalley.org/336/Current-Planning-Development-Review"
+
+JURUPA_VALLEY_PLANNING_PHONE = '(951) 332-6464'
+
+JURUPA_VALLEY_PLANNING_EMAIL = 'planninginfo@jurupavalley.org'
+
+JURUPA_VALLEY_PLANNING_OFFICE_NAME = 'Jurupa Valley Planning Office'
+
+
+
+## Huntington Beach Constants
+HUNTINGTON_BEACH_PLANNING_URL = "https://www.huntingtonbeachca.gov/government/departments/planning/major/"
+
+HUNTINGTON_BEACH_PLANNING_OFFICE_EMAIL = 'permitcenter@surfcity-hb.org'
+
+HUNTINGTON_BEACH_PLANNING_OFFICE_PHONE = '(714) 536-5271'
+
+HUNTINGTON_BEACH_PLANNING_OFFICE_NAME = 'Huntington Beach Planning Office'
+
+# planner names
+HUNTINGTON_BEACH_URSULA_LUNA_REYNOSA_NAME = 'Ursula Luna-Reynosa'
+HUNTINGTON_BEACH_JENNIFER_VILLASENOR_NAME = 'Jennifer Villasenor'
+HUNTINGTON_BEACH_KIM_DE_COITE_NAME = 'Kim De Coite'
+HUNTINGTON_BEACH_RICKY_RAMOS_NAME = 'Ricky Ramos'
+HUNTINGTON_BEACH_HAYDEN_BECKMAN_NAME = 'Hayden Beckman'
+HUNTINGTON_BEACH_TESS_NGUYEN_NAME = 'Tess Nguyen'
+HUNTINGTON_BEACH_JASON_KELLEY_NAME = 'Jason Kelley'
+HUNTINGTON_BEACH_JOANNA_CORTEZ_NAME = 'Joanna Cortez'
+HUNTINGTON_BEACH_ALYSSA_HELPER_NAME = 'Alyssa Helper'
+
+# planner emails
+HUNTINGTON_BEACH_URSULA_LUNA_REYNOSA_EMAIL = 'ursula.luna-reynosa@surfcity-hb.org'
+HUNTINGTON_BEACH_JENNIFER_VILLASENOR_EMAIL = 'jvillasenor@surfcity-hb.org'
+HUNTINGTON_BEACH_KIM_DE_COITE_EMAIL = 'kdecoite@surfcity-hb.org'
+HUNTINGTON_BEACH_RICKY_RAMOS_EMAIL = 'rramos@surfcity-hb.org'
+HUNTINGTON_BEACH_HAYDEN_BECKMAN_EMAIL = 'hayden.beckman@surfcity-hb.org'
+HUNTINGTON_BEACH_TESS_NGUYEN_EMAIL = 'tnguyen@surfcity-hb.org'
+HUNTINGTON_BEACH_JASON_KELLEY_EMAIL = 'jkelley@surfcity-hb.org'
+HUNTINGTON_BEACH_JOANNA_CORTEZ_EMAIL = 'joanna.cortez@surfcity-hb.org'
+HUNTINGTON_BEACH_ALYSSA_HELPER_EMAIL = 'alyssa.helper@surfcity-hb.org'
+
+hb_planner_names = {
+    HUNTINGTON_BEACH_URSULA_LUNA_REYNOSA_NAME: 'Ursula Luna-Reynosa',
+    HUNTINGTON_BEACH_JENNIFER_VILLASENOR_NAME: 'Jennifer Villasenor',
+    HUNTINGTON_BEACH_KIM_DE_COITE_NAME: 'Kim De Coite',
+    HUNTINGTON_BEACH_RICKY_RAMOS_NAME: 'Ricky Ramos',
+    HUNTINGTON_BEACH_HAYDEN_BECKMAN_NAME: 'Hayden Beckman',
+    HUNTINGTON_BEACH_TESS_NGUYEN_NAME: 'Tess Nguyen',
+    HUNTINGTON_BEACH_JASON_KELLEY_NAME: 'Jason Kelley',
+    HUNTINGTON_BEACH_JOANNA_CORTEZ_NAME: 'Joanna Cortez',
+    HUNTINGTON_BEACH_ALYSSA_HELPER_NAME: 'Alyssa Helper'
+}
+
+hb_planner_emails = {
+    HUNTINGTON_BEACH_URSULA_LUNA_REYNOSA_NAME: HUNTINGTON_BEACH_URSULA_LUNA_REYNOSA_EMAIL,
+    HUNTINGTON_BEACH_JENNIFER_VILLASENOR_NAME: HUNTINGTON_BEACH_JENNIFER_VILLASENOR_EMAIL,
+    HUNTINGTON_BEACH_KIM_DE_COITE_NAME: HUNTINGTON_BEACH_KIM_DE_COITE_EMAIL,
+    HUNTINGTON_BEACH_RICKY_RAMOS_NAME: HUNTINGTON_BEACH_RICKY_RAMOS_EMAIL,
+    HUNTINGTON_BEACH_HAYDEN_BECKMAN_NAME: HUNTINGTON_BEACH_HAYDEN_BECKMAN_EMAIL,
+    HUNTINGTON_BEACH_TESS_NGUYEN_NAME: HUNTINGTON_BEACH_TESS_NGUYEN_EMAIL,
+    HUNTINGTON_BEACH_JASON_KELLEY_NAME: HUNTINGTON_BEACH_JASON_KELLEY_EMAIL,
+    HUNTINGTON_BEACH_JOANNA_CORTEZ_NAME: HUNTINGTON_BEACH_JOANNA_CORTEZ_EMAIL,
+    HUNTINGTON_BEACH_ALYSSA_HELPER_NAME: HUNTINGTON_BEACH_ALYSSA_HELPER_EMAIL
+}
+
+## Costa Mesa Constants
+## Costa Mesa does now show active projects on their website. 
+
+## Westminster Constants
+## Westminster does not have a list of active projects on their website. 
+
+## Irvine Constants
+
+IRVINE_PLANNING_OFFICE_NAME = 'Irvine Planning Office'
+
+IRVINE_PLANNING_OFFICE_PHONE = '(949) 724-6308'
+
+IRVINE_PLANNING_OFFICE_EMAIL = 'PLANNINGCOMMISSION@CITYOFIRVINE.ORG'
+
+IRVINE_MAJOR_PLANNING_URL = 'https://www.cityofirvine.org/community-development/pending-major-development-applications'  #http://legacy.cityofirvine.org/civica/filebank/blobdload.asp?BlobID=11038
+
+## Buena Park Constants
+
+BUENA_PARK_PLANNING_OFFICE_NAME = 'Buena Park Planning Office'
+
+
+## Newport Beach Constants
+
+NEWPORT_BEACH_PLANNING_OFFICE_NAME = 'Newport Beach Planning Office'
+
+## Tustin Constants
+
+TUSTIN_PLANNING_OFFICE_NAME = 'Tustin Planning Office'
+
+## Aliso Viejo Constants
+
+ALISO_VIEJO_PLANNING_OFFICE_NAME = 'Aliso Viejo Planning Office'
+
+## Laguna Niguel Constants
+
+LAGUNA_NIGUEL_PLANNING_OFFICE_NAME = 'Laguna Niguel Planning Office'
+
+## Mission Viejo Constants
+
+MISSION_VIEJO_PLANNING_OFFICE_NAME = 'Mission Viejo Planning Office'
+
+## San Clemente Constants
+
+SAN_CLEMENTE_PLANNING_OFFICE_NAME = 'San Clemente Planning Office'
+
+
+
