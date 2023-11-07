@@ -80,6 +80,10 @@ Garden grove was also really complete with their data. They have a list of proje
 
 Fullerton data was also very complete. They have a list of projects that are currently in progress. The data is very detailed. Enough to draw insights from. Project Images may have to be scraped.
 
+- **City 8**: Costa Mesa, Ca
+
+The city website does not have any information to draw insights from. We may have to circle back on this in the future. 
+
 
 ## Contact
 
