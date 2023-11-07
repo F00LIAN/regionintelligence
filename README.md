@@ -1,7 +1,6 @@
 # Region Intelligence 
 
 ## Introduction
-# Region Intelligence
 
 Welcome to the official GitHub repository for Region Intelligence, the leading platform transforming municipal real-estate development insights!
 
@@ -34,14 +33,12 @@ Founded in August 2023, Region Intelligence was conceived by a group of dedicate
     ```bash
     cd official-repo
     ```
-3. **Dev LLM**:
 
-- This folder contains the code and pipeline to gather and parse building code information and fine-tube a LLM to be a subject matter expert in these codes. This is experimental and not used in the current version of the product. 
+3. **Install Poetry**: The environment is a poetry environment. To install poetry follow the instructions here: https://python-poetry.org/docs/#installation. Each project has a pyproject.toml file that contains the dependencies for the project. Each project has its own virtual environment. 
 
-4. **Map**: Detailed setup instructions can be found in `SETUP.md` within the repository.
--  This folder contains the code and pipeline to gather and process current planning projects from orange county cities. 
-- The data is then used to create a map of the projects and their details.
-- The map is then hosted on the websute
+4. **Dev LLM**: This folder contains the code and pipeline to gather and parse building code information and fine-tube a LLM to be a subject matter expert in these codes. This is experimental and not used in the current version of the product. 
+
+5. **Map**: This folder contains the code and pipeline to gather and process current planning projects from orange county cities. The data is then used to create a map of the projects and their details. The tables are stored in the 'data' directory. 
 
 ## Feedback & Contributions
 
