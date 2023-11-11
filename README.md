@@ -12,15 +12,24 @@ Founded in August 2023, Region Intelligence was conceived by a group of dedicate
 
 - **Aug 2023**: The inception of Region Intelligence. 
 - **September 2023**: After a month of brainstorming and ideation, we developed our first proof of concept.
-- **October 2023**: Using the feedback from our initial proof of concept, we developed our beta version, integrating enhanced data analytics capabilities and a user-friendly interface.
-- **November 2023**: A closed beta test was initiated, inviting key industry professionals for rigorous testing and feedback.
-- **December 2023**: With insights from our beta testers and continuous improvements, we launched our platform to widespread acclaim.
+- **November 2023**: Using the feedback from our initial proof of concept, we developed our beta version, integrating enhanced data analytics capabilities and a user-friendly interface.
+- **December 2023**: A closed beta test was initiated, inviting key industry professionals for rigorous testing and feedback.
+- **January 2023**: With insights from our beta testers and continuous improvements, we will launch V1 of our platform. 
 
 ## Features
 
-- **Data Aggregation**: Seamless integration with multiple municipal data sources, offering a comprehensive view of real-estate developments.
+- **Data Aggregation**: Seamless integration with multiple municipal data sources, offering a comprehensive view of real-estate developments and re-zoning projects.
 - **User-Friendly Interface**: Navigating complex municipal data has never been easier.
 - **Robust Analytics**: Dive deep into data trends with our robust analytical tools, tailored for industry professionals.
+
+## Main Projects in the Works
+
+1. **Map**: This folder contains the code and pipeline to gather and process current planning projects from orange county cities. The data is then used to create a map of the projects and their details. The tables are stored in the 'data' directory. 
+
+2. **Dev LLM**: This folder contains the code and pipeline to gather and parse building code information and fine-tube a LLM to be a subject matter expert in these codes. This is experimental and not used in the current version of the product. 
+
+3. **Agenda Extract**: This is the folder aimed to navigate and extract to the agenda items from the city websites. This is experimental and not used in the current version of the product. 
+
 
 ## Getting Started
 
@@ -34,11 +43,10 @@ Founded in August 2023, Region Intelligence was conceived by a group of dedicate
     cd official-repo
     ```
 
-3. **Install Poetry**: The environment is a poetry environment. To install poetry follow the instructions here: https://python-poetry.org/docs/#installation. Each project has a pyproject.toml file that contains the dependencies for the project. Each project has its own virtual environment. 
-
-4. **Dev LLM**: This folder contains the code and pipeline to gather and parse building code information and fine-tube a LLM to be a subject matter expert in these codes. This is experimental and not used in the current version of the product. 
-
-5. **Map**: This folder contains the code and pipeline to gather and process current planning projects from orange county cities. The data is then used to create a map of the projects and their details. The tables are stored in the 'data' directory. 
+3. **Install Poetry**: The environment is a poetry environment. To install poetry follow the instructions here: https://python-poetry.org/docs/#installation. Each project has a pyproject.toml file that contains the dependencies for the project. Each project has its own virtual environment. Once Poetry is installed you can navigate to the project directory and run the following command to install the dependencies for the project. 
+     ```bash
+    poetry update 
+    ```
 
 ## Feedback & Contributions
 
