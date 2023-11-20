@@ -1,0 +1,41 @@
+# The dashboard is installed on google cloud platform
+
+# Install Python and pip 
+sudo apt-get install update
+
+sudo apt-get install python3-distutils
+
+sudo apt-get install python3-apt
+
+sudo apt-get install wget
+
+wget https://bootstrap.pypa.io/get-pip.py
+
+sudo python3 get-pip.py
+
+# Install Pandas
+sudo pip3 install pandas
+
+
+############# APACHE AIRFLOW (PIPELINE MONITORING)  ################ 
+# Install Apache Airflow
+sudo pip install apache-airflow
+
+
+
+############## MAGE (PIPELINE MONITOR) ###############
+# Install Mage
+sudo pip3 install mage-ai
+
+
+############### IF USING AWS ##############
+# Install S3
+sudo pip3 install s3fs
+
+
+############## IF USING GOOGLE #################
+# Install Google Cloud Library
+sudo pip3 install google-cloud
+
+# Install google-cloud-bigquery
+sudo pip3 install google-cloud-bigquery

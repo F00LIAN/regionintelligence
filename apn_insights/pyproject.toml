@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "apn-insights"
+version = "0.1.0"
+description = ""
+authors = ["Julian Sotelo <juliansotelo@mail.fresnostate.edu>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.12"
+ipykernel = "^6.26.0"
+pandas = "^2.1.3"
+plotly = "^5.18.0"
+tqdm = "^4.66.1"
+polars = "^0.19.13"
+nbformat = "^5.9.2"
+dash = "^2.14.1"
+pyspark = "^3.5.0"
+pyarrow = "^14.0.1"
+google-cloud = "^0.34.0"
+google-cloud-bigquery = "^3.13.0"
+apache-airflow = "^2.7.3"
+pyyaml = "^6.0.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
