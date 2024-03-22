@@ -1,0 +1,231 @@
+{
+    "Long Beach, CA": [
+        {
+            "commission_name": "Planning Commission",
+            "agenda_link": "https://longbeach.primegov.com/Portal/Meeting?meetingTemplateId=27368",
+            "project_details": [
+                "https://longbeach.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=d2d7bc13-3848-46b3-85c6-0e2eeec1e58e",
+                "https://longbeach.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=fce1cc27-7ce3-4dbd-a9ea-23204a998bba",
+                "https://longbeach.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=1f262bad-9f35-40d6-a188-89e0eb6f9c4d",
+                "https://longbeach.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=bcb75a91-d80d-4267-bdd0-7b3d9f1c84c7"
+            ]
+        }
+    ],
+    "Menifee, CA": [
+        {
+            "commission_name": "Planning Commission Meeting",
+            "agenda_link": "https://cityofmenifee.primegov.com/Portal/Meeting?meetingTemplateId=10980",
+            "project_details": [
+                "https://cityofmenifee.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=f24f3bda-d47c-4c05-881e-46f75c0454f4",
+                "https://cityofmenifee.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=30c49be9-8c64-44ab-853a-128cd4a4b3a9",
+                "https://cityofmenifee.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=683a7af0-04f8-4877-8bae-d2106a454d7a",
+                "https://cityofmenifee.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=464f2c4c-d810-4930-b959-fe40a42819c1",
+                "https://cityofmenifee.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=f185d4c6-69ee-45d8-b34b-9c8f8fcd8182",
+                "https://cityofmenifee.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=6475883e-1124-45cc-b834-94d8863f1044"
+            ]
+        }
+    ],
+    "Santa Ana, CA": [],
+    "Victorville, CA": [
+        {
+            "commission_name": "Planning Commission Regular Meeting of March 13, 2024",
+            "agenda_link": "https://victorvilleca.primegov.com/Portal/Meeting?meetingTemplateId=8335",
+            "project_details": [
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=b81c52f1-40c0-47b5-bb27-c17d8282b413",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=dcd3869d-2061-4065-aaf1-9f222c1bde4d",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=aa6de9bf-d79b-4518-9e78-731657a34259",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=6023d4ad-4630-4552-8d46-0887786c3aa4",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=4aab515e-7934-442f-aca2-22a0fc93a54c",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=5302b19f-4068-48b9-ac8d-d0dd2690017f",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=46783e87-6b50-4206-ac4d-ae8e316eda02",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=61342d24-f19d-4b16-b987-bdf790b81f88",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=35b6a5a8-b2ed-460a-9069-39a325029131",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=9c191570-c94d-4057-8b3e-0c78508fb952",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=10c68ed0-0df4-41f1-be47-c598df571279",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=45c88013-5abb-43c3-abe7-993fd211d3fe",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=1c63257d-8e0a-4f95-b96e-1f54cb513ffc",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=c8ab2a61-4ac2-4149-9690-1db63031eb4c",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=ba5b5a73-6179-4c87-89df-30d7702d681e",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=316a7c50-1fc3-4b6b-8296-710c30d996d7",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=843f999c-865e-4341-9b18-c9b4f2a1419e",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=dbeb07d5-40c7-433f-964b-75842ab980a8",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=7c038b07-83c8-418c-8272-66a0e9159585",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=a5bffabf-6a30-436f-a0f8-bad600fae358",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=6579cbb0-ea3e-4462-b82d-b3f843a4fc62",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=ef4fd209-4fef-48cc-8dcf-bfee8b410f13",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=92d907cb-485d-4dbd-9285-8587c2a7e1f3",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=4f1a9922-9bf2-4df0-99b9-fd9ea6878027",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=b571f54a-6c38-457d-b10b-7cb70d94647d",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=7ddc46d8-1ae5-4da4-94ef-d7ef1444ca37",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=f1038c3e-bdea-4d2c-b1f0-e6cef3ea7e6c",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=f2e15cd1-7e1a-465c-9e67-d4aac2ebe031",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=a537adcd-e718-42fe-afee-239051a5c04d",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=3e8d3418-55aa-410c-8b58-17fee15a03da",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=1b5c9343-1d01-410a-b6da-236bdd2cf10e",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=8a2e6847-9e09-4ad3-b34d-403bcb1f3398",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=ee0eaef9-edbf-4ba4-9a7e-8c41b41992ed",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=072a84c5-bd97-4ad8-9c23-714f72890010",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=d935e888-fcd3-44a3-8f46-cf876a434e47",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=c0bd0504-c551-4a62-934b-344522afe5c7",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=937b4fe1-de32-4b88-9001-5de714f6a446",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=a02b5318-2a59-4c72-81a4-06848436795d",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=fa3e649b-2f81-4cb0-8312-51751eb66c00",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=b0621c8d-4de2-40ae-8b1a-59939bdf9b17",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=2d1a9035-7ba3-4880-8905-047a13b94e98",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=ae20daec-ca90-4a49-8310-1d5fb6fca9bd",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=ff5e5d78-06b3-4304-922d-1ef3249ab3bd",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=e3c246f8-79fd-4ae4-9f34-7b14ef62e3fc",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=1895703f-2d74-4e18-bdce-1cd8238b8b00",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=bc678a43-636b-4e8d-9c41-88126aef3e3e",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=37ace986-fd8f-4565-8b47-4038e5f7ca58",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=a87cecf1-ecf7-4143-919f-bf18035ccd49",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=a3dbe3ba-4298-4d38-9e8d-c10b78cef8d8",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=3ca19cd7-2cb0-47fe-bed8-2e5edd3afcd7",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=549a4756-947c-4f54-8165-9e0556f7bd5f",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=e78f2bc2-5f75-43d9-b747-4ba86cecb9d5",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=17089d46-f7c9-41ae-9119-83412628b825",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=5640cee9-7c9d-4285-aee3-e4abd0e8485d",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=ee89052d-f829-43a2-84e3-849f1db3b45a",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=ed73900b-bbf5-4480-b87b-892367157b7f",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=11732418-a75d-4653-b09b-5e32d46514ab",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=e1b9ef51-1a0b-4871-b758-7565ab4f2e39",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=7aa25386-1e64-4ea0-9c64-72a2853073d9",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=5ec05083-6b7a-4e00-b2d7-7675fda5dcb6",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=e548a74d-def4-4dbb-96b1-14da8f2a5c55",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=cd0b57fe-771d-4c89-abda-78f33d8275b1",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=ffd85891-9ae1-4f36-9ee8-673174b77d2b",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=d2072c1a-91b1-48c9-8d38-621c42baf3de",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=40af12e5-d92c-4ce8-8768-c523a901f02e",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=708c6da1-df11-4bcc-a5d2-76945dd83e57",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=8563c71b-4690-4d7d-b5fa-00750c7d3dbf",
+                "https://victorvilleca.primegov.com/api/compilemeetingattachmenthistory/historyattachment/?historyId=4ec35948-225e-48b3-a2d2-d7ad7a741ea2"
+            ]
+        },
+        {
+            "commission_name": "Planning Commission Regular Meeting of February 14, 2024",
+            "agenda_link": "https://victorvilleca.primegov.com/Public/CompiledDocument?meetingTemplateId=8299&compileOutputType=1",
+            "project_details": []
+        }
+    ],
+    "Corona, CA": [
+        {
+            "commission_name": "Planning and Housing Commission",
+            "agenda_link": "https://corona.legistar.com/View.ashx?M=PA&ID=1171236&GUID=F40ABEBC-9BC5-433D-B83E-41265CDDB581",
+            "project_details": []
+        },
+        {
+            "commission_name": "Planning and Housing Commission",
+            "agenda_link": "https://corona.legistar.com/View.ashx?M=PA&ID=1168067&GUID=61C1547D-CE06-4AEB-BE2A-B3D25B8BE36A",
+            "project_details": []
+        }
+    ],
+    "Costa Mesa, CA": [
+        {
+            "commission_name": "REGULAR CITY COUNCIL AND HOUSING AUTHORITY*",
+            "agenda_link": "https://costamesa.legistar.com/View.ashx?M=PA&ID=1144887&GUID=81A3690E-4325-4F30-BB6D-BCD38F808028",
+            "project_details": []
+        },
+        {
+            "commission_name": "REGULAR CITY COUNCIL AND HOUSING AUTHORITY*",
+            "agenda_link": "https://costamesa.legistar.com/View.ashx?M=PA&ID=1182645&GUID=BD03671A-77C4-4979-AAA6-4D48C6C5F36A",
+            "project_details": []
+        },
+        {
+            "commission_name": "PLANNING COMMISSION",
+            "agenda_link": "https://costamesa.legistar.com/View.ashx?M=PA&ID=1182868&GUID=47650B4E-F807-490C-AB2D-443315A62434",
+            "project_details": []
+        },
+        {
+            "commission_name": "REGULAR CITY COUNCIL AND HOUSING AUTHORITY*",
+            "agenda_link": "https://costamesa.legistar.com/View.ashx?M=PA&ID=1144886&GUID=F9D627E2-9F73-4F53-B5DD-BE937A58D888",
+            "project_details": []
+        },
+        {
+            "commission_name": "REGULAR CITY COUNCIL AND HOUSING AUTHORITY*",
+            "agenda_link": "https://costamesa.legistar.com/View.ashx?M=PA&ID=1171565&GUID=B7C4B0DD-7AD7-4ADC-B8C3-392422409AF7",
+            "project_details": []
+        },
+        {
+            "commission_name": "PLANNING COMMISSION",
+            "agenda_link": "https://costamesa.legistar.com/View.ashx?M=PA&ID=1181185&GUID=BF7693E0-96BA-4202-A3E5-2291BF4F9CFB",
+            "project_details": []
+        },
+        {
+            "commission_name": "REGULAR CITY COUNCIL AND HOUSING AUTHORITY*",
+            "agenda_link": "https://costamesa.legistar.com/View.ashx?M=PA&ID=1144874&GUID=A8B978A1-546F-458A-A9F4-56CF944F0744",
+            "project_details": []
+        },
+        {
+            "commission_name": "PLANNING COMMISSION",
+            "agenda_link": "https://costamesa.legistar.com/View.ashx?M=PA&ID=1170058&GUID=FAE2001A-02E7-462F-A38B-CF2A3233CBF1",
+            "project_details": []
+        },
+        {
+            "commission_name": "PLANNING COMMISSION",
+            "agenda_link": "https://costamesa.legistar.com/View.ashx?M=PA&ID=1165913&GUID=0FB1692D-132C-406F-BE53-FA647FC171B9",
+            "project_details": []
+        },
+        {
+            "commission_name": "REGULAR CITY COUNCIL AND HOUSING AUTHORITY*",
+            "agenda_link": "https://costamesa.legistar.com/View.ashx?M=PA&ID=1144863&GUID=584645D0-2AD4-4EB6-9E72-78009403D0D6",
+            "project_details": []
+        }
+    ],
+    "Culver City, CA": [
+        {
+            "commission_name": "PLANNING COMMISSION",
+            "agenda_link": "https://culvercity.legistar.com/View.ashx?M=A&ID=1140248&GUID=85873DDF-EE5E-47B2-8D14-C1D6DB56E56E",
+            "project_details": []
+        },
+        {
+            "commission_name": "PLANNING COMMISSION",
+            "agenda_link": "https://culvercity.legistar.com/View.ashx?M=A&ID=1140248&GUID=85873DDF-EE5E-47B2-8D14-C1D6DB56E56E",
+            "project_details": []
+        },
+        {
+            "commission_name": "ADVISORY COMMITTEE ON HOUSING AND HOMELESSNESS",
+            "agenda_link": "https://culvercity.legistar.com/View.ashx?M=A&ID=1183994&GUID=35F33E6C-32FB-43DC-9CB7-A50A734CEECC",
+            "project_details": []
+        },
+        {
+            "commission_name": "PLANNING COMMISSION",
+            "agenda_link": "https://culvercity.legistar.com/View.ashx?M=A&ID=1140247&GUID=40884387-7DED-4CB3-82CE-5CDB8044BEFB",
+            "project_details": []
+        },
+        {
+            "commission_name": "PLANNING COMMISSION",
+            "agenda_link": "https://culvercity.legistar.com/View.ashx?M=A&ID=1140246&GUID=94E13BD0-773E-405B-A3B5-85BB34D065E6",
+            "project_details": []
+        }
+    ],
+    "Fullerton, CA": [],
+    "Orange, CA": [
+        {
+            "commission_name": "Park Planning and Community Events Commission",
+            "agenda_link": "https://cityoforange.legistar.com/View.ashx?M=PA&ID=1123626&GUID=8090C1BF-FADD-45C4-82E3-C12CD16C6FB8",
+            "project_details": []
+        },
+        {
+            "commission_name": "Planning Commission",
+            "agenda_link": "https://cityoforange.legistar.com/View.ashx?M=PA&ID=1125254&GUID=09FF9129-5B8D-414E-8EAA-1AE4CD99A61D",
+            "project_details": []
+        },
+        {
+            "commission_name": "Planning Commission",
+            "agenda_link": "https://cityoforange.legistar.com/View.ashx?M=PA&ID=1125253&GUID=7E5C216F-3314-41AE-A4D7-260CD9F94A1C",
+            "project_details": []
+        }
+    ],
+    "Riverside, CA": [
+        {
+            "commission_name": "Planning Commission",
+            "agenda_link": "https://riversideca.legistar.com/View.ashx?M=A&ID=1142049&GUID=7602BD35-2A4D-4997-B232-2745279D3CBD",
+            "project_details": []
+        },
+        {
+            "commission_name": "Planning Commission",
+            "agenda_link": "https://riversideca.legistar.com/View.ashx?M=A&ID=1142050&GUID=ABE3548A-D9A2-46FA-820D-E0506E9D54BC",
+            "project_details": []
+        }
+    ]
+}

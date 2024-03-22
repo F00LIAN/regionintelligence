@@ -1,0 +1,16 @@
+2024-03-18 16:16:47,950 - DEBUG - asyncio - Using proactor: IocpProactor
+2024-03-18 16:16:47,951 - INFO - root - Scraping PrimeGov cities
+2024-03-18 16:22:12,576 - DEBUG - asyncio - Using proactor: IocpProactor
+2024-03-18 16:22:12,578 - INFO - root - Scraping PrimeGov cities
+2024-03-18 16:28:42,296 - DEBUG - asyncio - Using proactor: IocpProactor
+2024-03-18 16:28:42,298 - INFO - root - Scraping PrimeGov cities
+2024-03-18 16:30:16,670 - DEBUG - asyncio - Using proactor: IocpProactor
+2024-03-18 16:30:16,670 - INFO - root - Scraping PrimeGov cities
+2024-03-18 16:33:58,287 - DEBUG - asyncio - Using proactor: IocpProactor
+2024-03-18 16:33:58,287 - INFO - root - Scraping PrimeGov cities
+2024-03-18 16:35:47,888 - DEBUG - asyncio - Using proactor: IocpProactor
+2024-03-18 16:35:47,900 - INFO - root - Scraping PrimeGov cities
+2024-03-18 16:38:45,374 - DEBUG - asyncio - Using proactor: IocpProactor
+2024-03-18 16:38:45,374 - INFO - root - Scraping PrimeGov cities
+2024-03-18 16:41:37,035 - DEBUG - asyncio - Using proactor: IocpProactor
+2024-03-18 16:41:37,037 - INFO - root - Scraping PrimeGov cities

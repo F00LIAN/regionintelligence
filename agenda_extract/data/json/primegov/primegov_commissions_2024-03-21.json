@@ -1,0 +1,24 @@
+{
+    "Long Beach, CA": [
+        {
+            "commission_name": "Planning Commission",
+            "agenda_link": "https://longbeach.primegov.com/Portal/Meeting?meetingTemplateId=27368"
+        }
+    ],
+    "Santa Ana, CA": [
+        {
+            "commission_name": "Planning Commission - Regular Meeting",
+            "agenda_link": "https://santa-ana.primegov.com/Portal/Meeting?meetingTemplateId=21681"
+        }
+    ],
+    "Victorville, CA": [
+        {
+            "commission_name": "Planning Commission Regular Meeting of March 13, 2024",
+            "agenda_link": "https://victorvilleca.primegov.com/Portal/Meeting?meetingTemplateId=8335"
+        },
+        {
+            "commission_name": "Planning Commission Regular Meeting of February 14, 2024",
+            "agenda_link": "https://victorvilleca.primegov.com/Public/CompiledDocument?meetingTemplateId=8299&compileOutputType=1"
+        }
+    ]
+}

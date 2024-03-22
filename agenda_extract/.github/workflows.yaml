@@ -1,0 +1,29 @@
+name: Weekly Script Run
+
+on:
+  schedule:
+    # Runs at 00:00 UTC every Monday
+    - cron: '0 0 * * 1'
+
+jobs:
+  run_script:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.11.4' # Specify the Python version
+
+    - name: Install Poetry
+      run: curl -sSL https://install.python-poetry.org | python3 
+
+    - name: Install dependencies
+      run: 
+        poetry install
+
+    - name: Run script
+      run: python main_run.py

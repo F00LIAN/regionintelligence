@@ -1,21 +1,23 @@
 [tool.poetry]
-name = "agenda-extract"
-version = "0.1.0"
-description = ""
-authors = ["Julian Sotelo <juliansotelo@mail.fresnostate.edu>"]
+name = "entities-extraction-web-scrape"
+version = "0.1.2"
+description = "a python program that scrapes city agendas and extracts entities from the text"
+authors = ["Julian Sotelo"]
+license = "MIT"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = ">=3.11,<3.13"
-ipykernel = "^6.26.0"
-selenium = "^4.15.2"
-pandas = "^2.1.2"
-pdfplumber = "^0.10.3"
-bs4 = "^0.0.1"
-webdriver-manager = "^4.0.1"
-html5lib = "^1.1"
+python = "^3.11"
+langchain = "^0.0.247"
+fastapi = "*"
+openai = "0.28.1"
+beautifulsoup4 = "*"
+python-dotenv = "*"
+playwright = "*"
+ipykernel = "^6.29.3"
+pandas = "^2.2.1"
 openpyxl = "^3.1.2"
-tqdm = "^4.66.1"
+requests = "^2.31.0"
 
 
 [build-system]

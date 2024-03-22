@@ -1,0 +1,110 @@
+{
+    "Long Beach, CA": [
+        {
+            "commission_name": "City Council Special Meeting - Study Session",
+            "agenda_link": "https://longbeach.primegov.com/Portal/Meeting?meetingTemplateId=27277"
+        },
+        {
+            "commission_name": "Government Operations and Efficiency Committee (Attorney/Client)",
+            "agenda_link": "https://longbeach.primegov.com/Portal/Meeting?meetingTemplateId=27321"
+        },
+        {
+            "commission_name": "City Council Special Meeting - Closed Session",
+            "agenda_link": "https://longbeach.primegov.com/Portal/Meeting?meetingTemplateId=27339"
+        },
+        {
+            "commission_name": "City Council - Revised",
+            "agenda_link": "https://longbeach.primegov.com/Portal/Meeting?meetingTemplateId=27219"
+        },
+        {
+            "commission_name": "Transactions and Use Tax Citizens' Advisory Committee",
+            "agenda_link": "https://longbeach.primegov.com/Portal/Meeting?meetingTemplateId=27306"
+        },
+        {
+            "commission_name": "The Long Beach Community Investment Company",
+            "agenda_link": "https://longbeach.primegov.com/Portal/Meeting?meetingTemplateId=27316"
+        },
+        {
+            "commission_name": "Commission on Youth and Families",
+            "agenda_link": "https://longbeach.primegov.com/Portal/Meeting?meetingTemplateId=27358"
+        },
+        {
+            "commission_name": "Parks and Recreation Commission",
+            "agenda_link": "https://longbeach.primegov.com/Portal/Meeting?meetingTemplateId=27229"
+        },
+        {
+            "commission_name": "Belmont Shore Parking and Business Improvement Area Advisory Commission",
+            "agenda_link": "https://longbeach.primegov.com/Portal/Meeting?meetingTemplateId=27329"
+        },
+        {
+            "commission_name": "Utilities Commission",
+            "agenda_link": "https://longbeach.primegov.com/Portal/Meeting?meetingTemplateId=27334"
+        },
+        {
+            "commission_name": "Golf Advisory Committee - Special Meeting",
+            "agenda_link": "https://longbeach.primegov.com/Portal/Meeting?meetingTemplateId=27363"
+        },
+        {
+            "commission_name": "Airport Advisory Commission",
+            "agenda_link": "https://longbeach.primegov.com/Portal/Meeting?meetingTemplateId=27209"
+        },
+        {
+            "commission_name": "Planning Commission",
+            "agenda_link": "https://longbeach.primegov.com/Portal/Meeting?meetingTemplateId=27368"
+        },
+        {
+            "commission_name": "Board of Examiners Appeals and Condemnation",
+            "agenda_link": "https://longbeach.primegov.com/Portal/Meeting?meetingTemplateId=27311"
+        },
+        {
+            "commission_name": "Marine Advisory Commission",
+            "agenda_link": "https://longbeach.primegov.com/Portal/Meeting?meetingTemplateId=27179"
+        },
+        {
+            "commission_name": "Citizens' Advisory Commission on Disabilities",
+            "agenda_link": "https://longbeach.primegov.com/Portal/Meeting?meetingTemplateId=27250"
+        },
+        {
+            "commission_name": "Police Oversight Commission",
+            "agenda_link": "https://longbeach.primegov.com/Portal/Meeting?meetingTemplateId=27255"
+        },
+        {
+            "commission_name": "Ethics Commission",
+            "agenda_link": "https://longbeach.primegov.com/Public/CompiledDocument?meetingTemplateId=27234&compileOutputType=1"
+        }
+    ],
+    "Santa Ana, CA": [
+        {
+            "commission_name": "Regular City Council MeetingWatch Live ",
+            "agenda_link": "https://santa-ana.primegov.com/Portal/Meeting?meetingTemplateId=21713"
+        },
+        {
+            "commission_name": "Workforce Development Board - Regular Meeting",
+            "agenda_link": "https://santa-ana.primegov.com/Portal/Meeting?meetingTemplateId=21530"
+        },
+        {
+            "commission_name": "Arts and Culture Commission - Regular Meeting",
+            "agenda_link": "https://santa-ana.primegov.com/Portal/Meeting?meetingTemplateId=21536"
+        },
+        {
+            "commission_name": "Police Oversight Commission",
+            "agenda_link": "https://santa-ana.primegov.com/Portal/Meeting?meetingTemplateId=21847"
+        },
+        {
+            "commission_name": "Measure X Citizen Oversight Committee - Regular Meeting",
+            "agenda_link": "https://santa-ana.primegov.com/Portal/Meeting?meetingTemplateId=21841"
+        },
+        {
+            "commission_name": "Environmental and Transportation Advisory Commission - Regular Meeting",
+            "agenda_link": "https://santa-ana.primegov.com/Public/CompiledDocument?meetingTemplateId=21833&compileOutputType=1"
+        },
+        {
+            "commission_name": "Planning Commission - Regular Meeting",
+            "agenda_link": "https://santa-ana.primegov.com/Portal/Meeting?meetingTemplateId=21681"
+        },
+        {
+            "commission_name": "Police Oversight Commission - Special Meeting",
+            "agenda_link": "https://santa-ana.primegov.com/Portal/Meeting?meetingTemplateId=21823"
+        }
+    ]
+}
