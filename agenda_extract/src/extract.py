@@ -1,7 +1,5 @@
-from src.paths import CONCAT_DIR, FINAL_DIR, PDF_PATH
 import pandas as pd
 import json
-from src.const import city_website_prefix_links
 import time
 import requests
 from requests.exceptions import ChunkedEncodingError
@@ -9,6 +7,9 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 from pathlib import Path
 from urllib.parse import urlparse
+
+from const import city_website_prefix_links
+from paths import CONCAT_DIR, FINAL_DIR, PDF_PATH
 
 
 def get_latest_data():
@@ -23,24 +24,17 @@ def get_latest_data():
         data = json.load(f)
     
     print(f"Loaded data from {latest_file}")
+    
     return data
 
 
-def fetch_html(url):
+def fetch_html(url, retry_attempts=3):
     """
-    Fetches HTML content from a given URL.
-
-    Args:
-        url (str): The URL to fetch content from.
-
-    Returns:
-        str: HTML content of the page.
+    Fetches the HTML content from a given URL.
     """
-
     response = requests.get(url)
-    response.raise_for_status()  # Raises an HTTPError if the response was an unsuccessful status code
+    response.raise_for_status()  # Check for HTTP errors
 
-    print(f"Fetched HTML content from {url}")
     return response.text
 
 
@@ -59,35 +53,16 @@ def is_pdf_link(url):
 
     return parsed_url.path.lower().endswith('.pdf')
 
+
 def download_pdf(url):
     """
-    Downloads a PDF from a URL and saves it in the PDF directory.
 
-    Args:
-        url (str): The URL of the PDF to download.
-    """
-    try:
-        response = requests.get(url, stream=True)
-        response.raise_for_status()
-
-        filename = url.split('/')[-1]
-        filepath = PDF_PATH / filename
-
-        with open(filepath, 'wb') as f:
-            for chunk in response.iter_content(chunk_size=8192):
-                f.write(chunk)
-        return filepath
-    except Exception as e:
-        print(f"Failed to download PDF from {url}. Error: {e}")
-        return None
-    
-def download_pdf(url):
-    """
     Attempts to download a PDF from a URL and saves it in the PDF directory.
     Includes retry logic for handling incomplete downloads.
 
     Args:
         url (str): The URL of the PDF to download.
+
     """
     filename = url.split('/')[-1]
     filepath = PDF_PATH / filename
@@ -118,6 +93,7 @@ def download_pdf(url):
     else:
         print(f"Failed to download PDF after {max_attempts} attempts.")
         return None
+
 
 def extract_links(html_content, city_name):
     """
@@ -150,14 +126,16 @@ def update_agenda_links_with_pdfs_and_details(data):
     for city, agendas in data.items():
         for agenda in agendas:
             agenda_link = agenda.get('agenda_link', '')
+            print(agenda_link)
             if is_pdf_link(agenda_link):
                 pdf_path = download_pdf(agenda_link)
                 agenda['pdf_link'] = str(pdf_path) if pdf_path else "Failed to download"
+                
             else:
                 html_content = fetch_html(agenda_link)
                 project_details = extract_links(html_content, city)
                 agenda['project_details'] = project_details
-
+        time.sleep(1)
     return data
 
 
